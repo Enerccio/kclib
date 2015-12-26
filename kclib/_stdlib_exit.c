@@ -36,11 +36,16 @@ void abort(void){
 	while (true) ; /* sentinel loop */
 }
 
+
+extern void _fini();
+
 void exit(int status){
 	for (uint16_t ate = 0; ate < __atexit_func; ate++)
 		__atexit_funcs[ate]();
 
 	fflush(NULL);
+
+	_fini();
 
 	__kclib_terminate(status);
 	while (true) ; /* sentinel loop */

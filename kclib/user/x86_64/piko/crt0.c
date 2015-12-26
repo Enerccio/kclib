@@ -8,7 +8,6 @@
 
 extern int main(int argc, char** argv);
 extern void _init();
-extern void _finit();
 
 void _start(int argc, char** argv){
 	__initialize_locale();
@@ -17,8 +16,6 @@ void _start(int argc, char** argv){
 	_init();
 
 	int exitcode = main(argc, argv);
-
-	_finit();
 
 	exit(exitcode);
 }
