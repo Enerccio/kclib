@@ -1,7 +1,7 @@
 
 PREFIX?=
 LIBDIR?=$(PREFIX)/lib
-TARGET?=x86_64-piko
+TARGET?=x86_64-fhtagn
 MODE?=kernel
 DEBREL?=debug
 
