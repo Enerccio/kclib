@@ -35,7 +35,7 @@ size_t strxfrm(char* restrict s1, const char* restrict s2,
 /* _string_string.c */ // yeah I know, very cool name
 size_t strlen(const char *s);
 char* strcpy(char* restrict s1, const char* restrict s2);
-char* strncpy(char* restrict s1, register const char* restrict s2, size_t n)
+char* strncpy(char* restrict s1, register const char* restrict s2, size_t n);
 
 /* _string_searchops.c */
 void* memchr(const void* s, int c, size_t n);
