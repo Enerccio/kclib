@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <threads.h>
 #include "intinc/stdlib.h"
 
 typedef struct aheader {
@@ -15,9 +16,12 @@ typedef struct aheader {
 #define __MINIMUM_CHUNK_SIZE 64
 
 static aheader_t* malloc_address;
+static mtx_t allocation_mutex;
+static bool mutex_ready;
 
 void __initialize_malloc() {
 	malloc_address = NULL;
+	mutex_ready = mtx_init(&allocation_mutex, mtx_recursive) == thrd_success;
 }
 
 static aheader_t* __extend_heap(size_t size) {
@@ -92,7 +96,14 @@ static void* __malloc(size_t size) {
 }
 
 void* malloc(size_t s){
-	return __malloc(s);
+	if (mutex_ready) {
+		mtx_lock(&allocation_mutex);
+	}
+	void* mv = __malloc(s);
+	if (mutex_ready) {
+		mtx_unlock(&allocation_mutex);
+	}
+	return mv;
 }
 
 static void __free(void* ptr){
@@ -146,7 +157,13 @@ static void __free(void* ptr){
 }
 
 void free(void* ptr){
+	if (mutex_ready) {
+		mtx_lock(&allocation_mutex);
+	}
 	__free(ptr);
+	if (mutex_ready) {
+		mtx_unlock(&allocation_mutex);
+	}
 }
 
 void* calloc(size_t nmemb, size_t size){
@@ -185,5 +202,12 @@ void* realloc(void *ptr, size_t size){
 		free(ptr);
 		return NULL;
 	}
-	return __realloc(ptr, size);
+	if (mutex_ready) {
+		mtx_lock(&allocation_mutex);
+	}
+	void* rv = __realloc(ptr, size);
+	if (mutex_ready) {
+		mtx_unlock(&allocation_mutex);
+	}
+	return rv;
 }
