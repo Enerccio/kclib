@@ -31,7 +31,7 @@ aheader_t* __extend_heap(size_t size) {
 
 	aheader_t* header = (aheader_t*)new_chunk;
 	header->free = 1<<1;
-	header->size = size;
+	header->size = size-sizeof(aheader_t);
 	header->next_chunk = 0;
 
 	return header;
