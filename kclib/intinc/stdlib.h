@@ -17,6 +17,8 @@ extern "C" {
  */
 uint8_t __radixval(char c);
 
+void __initialize_malloc();
+
 #ifdef __cplusplus
 }
 #endif

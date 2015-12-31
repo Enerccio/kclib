@@ -127,6 +127,7 @@ string.h
 * memcpy
 * strlen
 * strcpy
+* strncpy
 * memcmp
 * strcmp
 * strncmp

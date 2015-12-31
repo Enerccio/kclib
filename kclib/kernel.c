@@ -6,6 +6,7 @@
 
 void __initialize_kclib(){
 
+	__initialize_malloc();
 	__initialize_locale();
 	__initialize_streams();
 

@@ -68,10 +68,23 @@ void* memcpy(void* restrict s1, const void* restrict s2, size_t n){
 	if (b1 == b2)
 		return b1;
 
-	for (size_t i = 0; i < n; i++){
-		b1[i] = b2[i];
+	if ((((uintptr_t)s1) % sizeof(uintptr_t) == 0) &&
+			(((uintptr_t)s2) % sizeof(uintptr_t) == 0) &&
+			(n % sizeof(uintptr_t) == 0)) {
+		// everything is sizeof(uintptr_t) byte aligned
+		uintptr_t* u1 = (uintptr_t*)s1;
+		uintptr_t* u2 = (uintptr_t*)s2;
+		n /= sizeof(uintptr_t);
+		for (size_t i = 0; i < n; i++){
+			u1[i] = u2[i];
+		}
+		return u2;
+	} else {
+		for (size_t i = 0; i < n; i++){
+			b1[i] = b2[i];
+		}
+		return b2;
 	}
-	return b2;
 }
 
 void memset(void* ptr, int32_t c, size_t n){
