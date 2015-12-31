@@ -17,7 +17,7 @@ typedef struct aheader {
 
 static aheader_t* malloc_address;
 static mtx_t allocation_mutex;
-static bool mutex_ready;
+static bool mutex_ready = false;
 
 void __initialize_malloc() {
 	malloc_address = NULL;
