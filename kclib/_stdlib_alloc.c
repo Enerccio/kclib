@@ -79,8 +79,8 @@ void* __malloc(size_t size) {
 	}
 
 	free_chunk->free &= ~(1<<1);
-	if (free_chunk->size - total_size >= __MINIMUM_CHUNK_SIZE) {
-		__split_chunk(free_chunk, total_size);
+	if (free_chunk->size - size >= __MINIMUM_CHUNK_SIZE) {
+		__split_chunk(free_chunk, size);
 	}
 
 	void* address = (void*) (((uintptr_t)free_chunk) + sizeof(aheader_t));
