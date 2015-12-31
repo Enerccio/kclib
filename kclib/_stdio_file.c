@@ -11,9 +11,6 @@ FILE __stdin;
 FILE*  stdin;
 
 int fclose(FILE* stream){
-	if (!__IS_CLOSEABLE(stream->fflags))
-		return 0;
-
 	int err = fflush(stream);
 	__free_buffer(&stream->buffer);
 	if (__IS_HASBUFFER(stream->fflags)){
