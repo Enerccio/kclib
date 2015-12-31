@@ -376,7 +376,9 @@ void __reclaim_chunk(ainfo_t* allocator){
 	}
 	// no mem detected, reclaim chunk
 	__kclib_deallocate(allocator->start_address, __ALLOC_PAGE_SIZE);
-	allocator->present = allocator->residue_address = allocator->base_used = allocator->residue_count = 0;
+	allocator->present = allocator->start_address =
+			allocator->residue_address = allocator->base_used
+			= allocator->residue_count = 0;
 
 	// combine right hole(s)
 	allocator->total_hole = __ALLOC_PAGE_SIZE;
