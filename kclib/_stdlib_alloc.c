@@ -119,8 +119,9 @@ void __free(void* ptr){
 		nchunk = (aheader_t*)chunk->next_chunk;
 	}
 
-	aheader_t* pchunk = (aheader_t*)chunk->prev_chunk;
+	aheader_t* pchunk;
 	while (true) {
+		pchunk = (aheader_t*)chunk->prev_chunk;
 		if (pchunk == NULL || ((chunk->free & ((1<<2))) != 0)) {
 			// this is first chunk or NULL
 			if (nchunk == NULL || ((nchunk->free & ((1<<2))) != 0)) {
