@@ -62,8 +62,6 @@ void* __malloc(size_t size) {
 		}
 		pc = *chunk;
 		chunk = (aheader_t**)&((*chunk)->next_chunk);
-		if (chunk == NULL)
-			break;
 	}
 
 	if (free_chunk == NULL) {
