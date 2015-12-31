@@ -21,7 +21,7 @@ else
 	ADAPTER :=
 endif
 
-CFLAGS:= -ffreestanding -std=c99 -Wall -Wextra \
+CFLAGS:= -ffreestanding -std=c11 -Wall -Wextra \
 	-fmessage-length=0 -nostdlib \
 	 $(DEBREL_CFLAGS) $(MODE_CFLAGS) $(MACHINEDEF_CFLAGS) $(SYSDEF_CFLAGS) $(CFLAGS_FOR_TARGET) 
 CPPFLAGS = $(MODE_CPPFLAGS) $(MACHINEDEF_CPPFLAGS) \

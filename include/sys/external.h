@@ -15,6 +15,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <sys/stat.h>
+#include <time.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -27,6 +28,8 @@ extern "C" {
 #ifndef __NEWLINE
 #define __NEWLINE '\n'
 #endif
+
+typedef size_t mtx_id_t;
 
 #ifdef __KCLIB_KERNEL_MODE
 
@@ -98,6 +101,37 @@ extern ptrdiff_t  __kclib_send_data(void* stream, uint8_t* array, size_t buffer_
  * Returns actually read data or -1 on failure
  */
 extern ptrdiff_t  __kclib_read_data(void* stream, uint8_t* buffer, size_t read_amount);
+/**
+ * Returns impl. defined time since last era that will be divided by CLOCKS_PER_SEC
+ */
+extern clock_t __kclib_clock();
+/**
+ * Returns some identifier for mutex. __SIZE_MAX__ is returned if mutex global
+ * identifier cannot be created.
+ *
+ * This is used for scheduling purposes (to halt until resource is ready etc)
+ */
+extern mtx_id_t __kclib_get_mutex_global_identifier();
+/**
+ * Returns identifier of
+ *
+ * a) current thread, if this is user space library
+ *
+ * b) cpu identification, if it is kernel library
+ *
+ * __SIZE_MAX__ is reserved value
+ */
+extern tid_t __kclib_get_tid();
+/**
+ * Halts the current process (gives cpu time to other process).
+ *
+ * Simplest version would be spinlock.
+ */
+extern void __kclib_halt(mtx_id_t __asked_mutex);
+/**
+ * Informs OS that mutex needs to be unlocked
+ */
+extern void __kclib_mutex_unlocked(mtx_id_t __asked_mutex);
 
 #ifdef __cplusplus
 }

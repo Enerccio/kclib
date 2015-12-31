@@ -44,3 +44,29 @@ __kclib_send_data:
 __kclib_read_data:
 	xor rax, rax
 	ret
+
+[GLOBAL __kclib_clock]
+__kclib_clock:
+	xor rax, rax
+	ret
+
+[GLOBAL __kclib_get_tid]
+__kclib_get_tid:
+	xor rax, rax
+	ret
+
+[GLOBAL __kclib_halt]
+__kclib_halt:
+	xor rax, rax
+	ret
+
+
+[GLOBAL __kclib_get_mutex_global_identifier]
+__kclib_get_mutex_global_identifier:
+	xor rax, rax
+	ret
+
+[GLOBAL __kclib_mutex_unlocked]
+__kclib_mutex_unlocked:
+	xor rax, rax
+	ret
