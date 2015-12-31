@@ -1,6 +1,7 @@
 #include <sys/kernel.h>
 #include "intinc/locale.h"
 #include "intinc/stdio.h"
+#include "intinc/stdlib.h"
 
 #ifdef __KCLIB_KERNEL_MODE
 
