@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <errno.h>
+#include <stdbool.h>
 #include "intinc/stdio.h"
+
+int __vprintf(bool printeos, FILE* file, const char* restrict format, va_list arg);
 
 int vprintf(const char* restrict format, va_list arg){
 	return vfprintf(stdout, format, arg);
@@ -11,10 +14,10 @@ int vsprintf(char* restrict s, const char* restrict format, va_list arg){
 }
 
 int vsnprintf(char* restrict s, size_t n, const char* restrict format, va_list arg){
-	FILE* vfs = __create_vstream((uint8_t*)s, n, _IOLBF);
+	FILE* vfs = __create_vstream((uint8_t*)s, n-1, _IOLBF);
 	if (vfs == NULL)
 		return EOF;
-	int retval = vfprintf(vfs, format, arg);
+	int retval = __vprintf(true, vfs, format, arg);
 	fclose(vfs);
 	free(vfs);
 	return retval;
@@ -470,6 +473,13 @@ int __vprintf_arg(FILE* stream, char** fplace, size_t* writelen,
 
 int vfprintf(FILE* restrict stream,
 		const char* restrict format,
+		va_list arg) {
+	return __vprintf(false, stream, format, arg);
+}
+
+int __vfprintf(bool eos,
+		FILE* restrict stream,
+		const char* restrict format,
 		va_list arg){
 
 	char* fmt = (char*) format;
@@ -618,5 +628,8 @@ int vfprintf(FILE* restrict stream,
 		}
 	}
 
+	if (eos) {
+		__PRINTF_WRITE("\0", stream, 1);
+	}
 	return 0;
 }
