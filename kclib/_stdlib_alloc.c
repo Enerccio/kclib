@@ -48,6 +48,7 @@ void __split_chunk(aheader_t* chunk, size_t size) {
 	if (chunk->next_chunk != 0)
 		((aheader_t*)chunk->next_chunk)->prev_chunk = (uintptr_t)next_chunk;
 	chunk->next_chunk = (uintptr_t)next_chunk;
+	chunk->size = size;
 }
 
 void* __malloc(size_t size) {
@@ -111,25 +112,32 @@ void __free(void* ptr){
 			// chunk is free
 			chunk->size += sizeof(aheader_t) + nchunk->size;
 			chunk->next_chunk = nchunk->next_chunk;
+			if (nchunk->next_chunk != 0) {
+				((aheader_t*)nchunk)->prev_chunk = (uintptr_t)chunk;
+			}
 		}
 		nchunk = (aheader_t*)chunk->next_chunk;
-		if (nchunk != 0) {
-			((aheader_t*)nchunk)->prev_chunk = (uintptr_t)chunk;
-		}
 	}
 
 	aheader_t* pchunk = (aheader_t*)chunk->prev_chunk;
-	if (pchunk == NULL || ((chunk->free & ((1<<2))) != 0)) {
-		// this is first chunk or NULL
-		if (nchunk == NULL || ((nchunk->free & ((1<<2))) != 0)) {
-			__kclib_deallocate((uintptr_t)chunk, chunk->size+sizeof(aheader_t));
-			if (pchunk == NULL) {
-				malloc_address = nchunk;
-			} else {
-				pchunk->next_chunk = (uintptr_t)nchunk;
+	while (true) {
+		if (pchunk == NULL || ((chunk->free & ((1<<2))) != 0)) {
+			// this is first chunk or NULL
+			if (nchunk == NULL || ((nchunk->free & ((1<<2))) != 0)) {
+				__kclib_deallocate((uintptr_t)chunk, chunk->size+sizeof(aheader_t));
+				if (pchunk == NULL) {
+					malloc_address = nchunk;
+				} else {
+					pchunk->next_chunk = (uintptr_t)nchunk;
+				}
 			}
+			return;
 		}
-
+		if ((chunk->free & ((1<<1))) == 0) {
+			// filled chunk, we are done
+			return;
+		}
+		chunk = (aheader_t*)chunk->prev_chunk;
 	}
 }
 
