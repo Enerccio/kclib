@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include "intinc/stdio.h"
 
-int __vfprintf(bool printeos, FILE* file, const char* restrict format, va_list arg);
+static int __vfprintf(bool printeos, FILE* file, const char* restrict format, va_list arg);
 
 int vprintf(const char* restrict format, va_list arg){
 	return vfprintf(stdout, format, arg);
@@ -191,7 +191,7 @@ static const int const __digits_to_radix[2048] = {
 	((conv == __PRINTF_CONV_UINT_TO_UOCT) ? 8 : \
 	   16))
 
-char __valradix(uint8_t v, bool uppercase){
+static char __valradix(uint8_t v, bool uppercase){
 	static char val_radix_upper[] = {
 					'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
 					'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
@@ -206,7 +206,7 @@ char __valradix(uint8_t v, bool uppercase){
 		return val_radix_lower[v];
 }
 
-int __vprintf_arg(FILE* stream, char** fplace, size_t* writelen,
+static int __vprintf_arg(FILE* stream, char** fplace, size_t* writelen,
 					uint64_t flags, int widthspec, int precision, uint64_t lenmod, uint64_t type, va_list args){
 	if (type == __PRINTF_CONV_PERC){
 		__PRINTF_WRITE("%", stream, 1);
@@ -477,7 +477,7 @@ int vfprintf(FILE* restrict stream,
 	return __vfprintf(false, stream, format, arg);
 }
 
-int __vfprintf(bool eos,
+static int __vfprintf(bool eos,
 		FILE* restrict stream,
 		const char* restrict format,
 		va_list arg){

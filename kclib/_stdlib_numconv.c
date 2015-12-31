@@ -30,7 +30,7 @@ const char* __filter(const char* nptr){
 	return nptr;
 }
 
-size_t __countnumeric(const char** ptraddr, int* base, bool* minus, const char** end){
+static size_t __countnumeric(const char** ptraddr, int* base, bool* minus, const char** end){
 	const char* ptr = *ptraddr;
 
 	size_t blen = strlen(ptr);

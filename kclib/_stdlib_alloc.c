@@ -14,13 +14,13 @@ typedef struct aheader {
 #define __MINIMUM_HEAP_EXTENDED_AMOUNT 0x2000
 #define __MINIMUM_CHUNK_SIZE 64
 
-aheader_t* malloc_address;
+static aheader_t* malloc_address;
 
 void __initialize_malloc() {
 	malloc_address = NULL;
 }
 
-aheader_t* __extend_heap(size_t size) {
+static aheader_t* __extend_heap(size_t size) {
 	if (size < __MINIMUM_HEAP_EXTENDED_AMOUNT) {
 		size = __MINIMUM_HEAP_EXTENDED_AMOUNT;
 	}
@@ -38,7 +38,7 @@ aheader_t* __extend_heap(size_t size) {
 	return header;
 }
 
-void __split_chunk(aheader_t* chunk, size_t size) {
+static void __split_chunk(aheader_t* chunk, size_t size) {
 	aheader_t* next_chunk = (aheader_t*)
 			(((uintptr_t)chunk)+sizeof(aheader_t)+size);
 	next_chunk->size = chunk->size - size - sizeof(aheader_t);
@@ -51,7 +51,7 @@ void __split_chunk(aheader_t* chunk, size_t size) {
 	chunk->size = size;
 }
 
-void* __malloc(size_t size) {
+static void* __malloc(size_t size) {
 	size_t total_size = __ALIGN_UP(size + sizeof(aheader_t), 16);
 
 	aheader_t** chunk = &malloc_address;
@@ -95,7 +95,7 @@ void* malloc(size_t s){
 	return __malloc(s);
 }
 
-void __free(void* ptr){
+static void __free(void* ptr){
 	aheader_t* chunk = &((aheader_t*)ptr)[-1];
 	chunk->free |= (1<<1);
 	memset(ptr, 0xCD, chunk->size);
@@ -163,7 +163,7 @@ void* calloc(size_t nmemb, size_t size){
 	return data;
 }
 
-void* __realloc(void* ptr, size_t size){
+static void* __realloc(void* ptr, size_t size){
 	aheader_t* chunk = &((aheader_t*)ptr)[-1];
 	if (chunk->size > size && chunk->size-size >= __MINIMUM_CHUNK_SIZE) {
 		__split_chunk(chunk, size);

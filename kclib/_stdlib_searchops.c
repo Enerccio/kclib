@@ -29,7 +29,7 @@ void* bsearch(const void* key, const void* base,
 	memmove(__VARRAY_ACCESS(id1), __VARRAY_ACCESS(id2), size); \
 	memmove(__VARRAY_ACCESS(id2), *tmp, size)
 
-void __qsort(void* base, size_t size,
+static void __qsort(void* base, size_t size,
 		int (*compar)(const void *, const void *),
 		size_t start, size_t end, void** tmp){
 	if (start >= end)

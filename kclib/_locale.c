@@ -112,7 +112,7 @@ char* setlocale(int category, const char* locale){
 	whereto = malloc(sizeof(uint8_t)*256); \
 	memcpy(whereto, from, sizeof(uint8_t)*256);
 
-void __initialize_ctype_tables(lctype_h* ctype){
+static void __initialize_ctype_tables(lctype_h* ctype){
 	int8_t etable [] = {
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -166,7 +166,7 @@ void __initialize_ctype_tables(lctype_h* ctype){
 		ctype->xdigit_table[(int8_t)c] = 1;
 }
 
-void __generate_stdasciicollate(lcoll_t* collate){
+static void __generate_stdasciicollate(lcoll_t* collate){
 	collate->nelems = 127;
 	collate->colls = malloc(sizeof(lcoll_elem_t*)*collate->nelems);
 	uint8_t* colids = malloc(sizeof(uint8_t)*collate->nelems);
@@ -219,7 +219,7 @@ void __initialize_locale(){
 	setlocale(LC_ALL, "C");
 }
 
-size_t __find_weights(char** stream, int32_t** weights){
+static size_t __find_weights(char** stream, int32_t** weights){
 	lcoll_t* ctable = &active_locale.collation_locale;
 
 	for (size_t i=0; i<ctable->nelems; i++){

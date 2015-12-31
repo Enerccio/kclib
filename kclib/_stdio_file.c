@@ -75,7 +75,7 @@ FILE* __create_filehandle(void* pd){
 	return f;
 }
 
-void __init_std_stream(FILE* stream, void* fd, int mode){
+static void __init_std_stream(FILE* stream, void* fd, int mode){
 	stream->handle = fd;
 	setvbuf(stream, NULL, mode, BUFSIZ);
 }

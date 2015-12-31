@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 
-uint32_t __seed = 3;
+static uint32_t __seed = 3;
 
 int rand(){
 	__seed = (((__seed * 214013L + 2531011L) >> 16) & 32767);
