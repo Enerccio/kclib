@@ -9,7 +9,7 @@
 #include "intinc/threads.h"
 
 int cnd_broadcast(cnd_t* cond) {
-
+	return thrd_error;
 }
 
 void cnd_destroy(cnd_t* cond) {
@@ -17,22 +17,20 @@ void cnd_destroy(cnd_t* cond) {
 }
 
 int cnd_init(cnd_t* cond) {
-
+	return thrd_error;
 }
 
 int cnd_signal(cnd_t* cond) {
-
+	return thrd_error;
 }
 
 int cnd_timedwait(cnd_t* restrict cond, mtx_t* restrict mtx, const struct timespec* restrict ts) {
-
+	return thrd_error;
 }
 
 int cnd_wait(cnd_t* cond, mtx_t* mtx) {
-
+	return thrd_error;
 }
-
-// __kclib_get_tid()
 
 int mtx_init(mtx_t* mtx, int type) {
 	mtx->__mtx_state = 1;
@@ -83,7 +81,7 @@ int mtx_lock(mtx_t* mtx) {
 }
 
 int mtx_timedlock(mtx_t* restrict mtx, const struct timespec* restrict ts) {
-
+	return thrd_error;
 }
 
 int mtx_trylock(mtx_t* mtx) {
