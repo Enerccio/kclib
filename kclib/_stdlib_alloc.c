@@ -101,9 +101,11 @@ void __free(void* ptr){
 	memset(ptr, 0xCD, chunk->size);
 
 	aheader_t* nchunk = (aheader_t*)chunk->next_chunk;
+	aheader_t* lvchunk = NULL;
 	while (true) {
 		if (nchunk == 0)
 			break;
+		lvchunk = nchunk;
 		if ((nchunk->free & ((1<<2))) != 0) {
 			// next is allocator chunk, stop this
 			break;
@@ -116,6 +118,7 @@ void __free(void* ptr){
 				((aheader_t*)nchunk)->prev_chunk = (uintptr_t)chunk;
 			}
 		}
+
 		nchunk = (aheader_t*)chunk->next_chunk;
 	}
 
@@ -124,12 +127,12 @@ void __free(void* ptr){
 		pchunk = (aheader_t*)chunk->prev_chunk;
 		if (pchunk == NULL || ((chunk->free & ((1<<2))) != 0)) {
 			// this is first chunk or NULL
-			if (nchunk == NULL || ((nchunk->free & ((1<<2))) != 0)) {
+			if (lvchunk == NULL || ((lvchunk->free & ((1<<2))) != 0)) {
 				__kclib_deallocate((uintptr_t)chunk, chunk->size+sizeof(aheader_t));
 				if (pchunk == NULL) {
-					malloc_address = nchunk;
+					malloc_address = lvchunk;
 				} else {
-					pchunk->next_chunk = (uintptr_t)nchunk;
+					pchunk->next_chunk = (uintptr_t)lvchunk;
 				}
 			}
 			return;
