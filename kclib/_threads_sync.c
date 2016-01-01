@@ -65,14 +65,18 @@ int mtx_lock(mtx_t* mtx) {
 	if (mtx->__mtx_reentrant) {
 		tid_t mtx_state = __TID_SENTINEL_VALUE;
 		tid_t this_tid = __kclib_get_tid();
-		while (mtx_state == __TID_SENTINEL_VALUE) {
+		while (true) {
 			mtx_state = __sync_val_compare_and_swap(&mtx->__mtx_bthread, __TID_SENTINEL_VALUE, this_tid);
+			if (mtx_state == __TID_SENTINEL_VALUE)
+				break;
 			__kclib_halt(mtx->__mtx_external_id);
 		}
 	} else {
 		int mtx_state = 0;
-		while (mtx_state == 0) {
+		while (true) {
 			mtx_state = __sync_val_compare_and_swap(&mtx->__mtx_state, 1, mtx_state);
+			if (mtx_state == 0)
+				break;
 			__kclib_halt(mtx->__mtx_external_id);
 		}
 		mtx->__mtx_bthread = __kclib_get_tid();
