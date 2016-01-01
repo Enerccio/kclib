@@ -24,7 +24,7 @@
 #define TSS_DTOR_ITERATIONS (4096)
 
 typedef struct cnd cnd_t;
-typedef struct thrd thrd_t;
+typedef tid_t thrd_t;
 typedef struct tss tss_t;
 typedef struct mtx mtx_t;
 typedef struct once_flag once_flag;
@@ -64,10 +64,6 @@ struct cnd {
 };
 
 struct tss {
-
-};
-
-struct thrd {
 
 };
 
