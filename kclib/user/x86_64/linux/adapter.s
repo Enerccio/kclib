@@ -1,10 +1,5 @@
 [BITS 64]
 
-[GLOBAL __kclib_environ_search_u]
-__kclib_environ_search_u:
-	xor rax, rax
-	ret
-
 [GLOBAL __kclib_open_file_u]
 __kclib_open_file_u:
 	xor rax, rax

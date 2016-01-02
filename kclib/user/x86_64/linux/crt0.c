@@ -8,15 +8,16 @@
 
 extern int main(int argc, char** argv);
 extern void _init();
+char* envp[];
 
-void _start(int argc, char** argv){
+void _start(int argc, char* argv[], char* e[]){
+	envp = e;
+
 	__initialize_malloc();
 	__initialize_locale();
 	__initialize_streams();
 
 	_init();
 
-	int exitcode = main(argc, argv);
-
-	exit(exitcode);
+	exit(main(argc, argv));
 }

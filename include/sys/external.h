@@ -48,11 +48,6 @@ extern __noreturn __kclib_assert_failure_k(uint32_t lineno, const char* file, co
 #else
 // user space only required functions
 
-/**
- * Returns value for key in environment, null if there is none
- */
-extern char*	  __kclib_environ_search_u(char* key);
-
 #define __MODE_READ   (1<<1)
 #define __MODE_WRITE  (1<<2)
 #define __MODE_APPEND (1<<3)
