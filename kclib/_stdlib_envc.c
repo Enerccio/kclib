@@ -1,6 +1,6 @@
 #include <stdlib.h>
 
-extern char* envp[];
+extern char** envp;
 
 char* getenv(const char* name){
 	return NULL;
