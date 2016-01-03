@@ -56,6 +56,7 @@ typedef intmax_t uid_t;  //    Used for user IDs.
 typedef uint32_t useconds_t;  //    Used for time in microseconds.
 
 typedef size_t tid_t;
+#define __TID_MAX__ __SIZE_MAX__
 
 #ifndef SSIZE_MAX
 #define SSIZE_MAX INTMAX_MAX
