@@ -87,9 +87,10 @@ void* memcpy(void* restrict s1, const void* restrict s2, size_t n){
 	}
 }
 
-void memset(void* ptr, int32_t c, size_t n){
+void* memset(void* ptr, int32_t c, size_t n){
 	register unsigned char* cptr = (unsigned char*)ptr;
 	register uint8_t chv = c;
 	for (register size_t i = 0; i < n; i++)
 		cptr[i] = chv;
+	return ptr;
 }
