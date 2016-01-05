@@ -16,7 +16,8 @@ __kclib_terminate:
 
 [GLOBAL __kclib_allocate]
 __kclib_allocate:
-	xor rax, rax
+	mov rax, 1
+	int 0x80
 	ret
 
 [GLOBAL __kclib_deallocate]
