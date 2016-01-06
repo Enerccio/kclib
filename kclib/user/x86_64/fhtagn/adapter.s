@@ -9,9 +9,18 @@ __kclib_fstat_u:
 	xor rax, rax
 	ret
 
-[GLOBAL __kclib_terminate]
-__kclib_terminate:
+[GLOBAL __kclib_terminate_u]
+__kclib_terminate_u:
 	xor rax, rax
+	ret
+
+[GLOBAL __kclib_fork_u]
+__kclib_fork_u:
+	mov rax, 4
+	mov rsi, rdi
+	xor rdi, rdi
+	int 0x80
+	mov [rsi], rdi
 	ret
 
 [GLOBAL __kclib_allocate]
@@ -22,7 +31,8 @@ __kclib_allocate:
 
 [GLOBAL __kclib_deallocate]
 __kclib_deallocate:
-	xor rax, rax
+	mov rax, 2
+	int 0x80
 	ret
 
 [GLOBAL __kclib_open_std_stream]
@@ -47,7 +57,8 @@ __kclib_clock:
 
 [GLOBAL __kclib_get_tid]
 __kclib_get_tid:
-	xor rax, rax
+	mov rax, 3
+	int 0x80
 	ret
 
 [GLOBAL __kclib_halt]
@@ -55,13 +66,14 @@ __kclib_halt:
 	xor rax, rax
 	ret
 
-
 [GLOBAL __kclib_get_mutex_global_identifier]
 __kclib_get_mutex_global_identifier:
-	xor rax, rax
+	mov rax, 5
+	int 0x80
 	ret
 
 [GLOBAL __kclib_mutex_unlocked]
 __kclib_mutex_unlocked:
-	xor rax, rax
+	mov rax, 6
+	int 0x80
 	ret
