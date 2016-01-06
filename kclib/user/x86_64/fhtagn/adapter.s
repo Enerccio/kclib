@@ -68,12 +68,12 @@ __kclib_halt:
 
 [GLOBAL __kclib_get_mutex_global_identifier]
 __kclib_get_mutex_global_identifier:
-	mov rax, 5
-	int 0x80
+	; not supported by chtulhuos due to scheduler setup
+	xor rax, rax
 	ret
 
 [GLOBAL __kclib_mutex_unlocked]
 __kclib_mutex_unlocked:
-	mov rax, 6
-	int 0x80
+	; not supported by chtulhuos due to scheduler setup
+	xor rax, rax
 	ret

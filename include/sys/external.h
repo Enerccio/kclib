@@ -69,7 +69,7 @@ extern int		  __kclib_fstat_u(void* descriptor, struct stat* stat, int* errno);
  */
 extern void       __kclib_terminate_u(int exit_status);
 
-extern tid_t      __kclib_fork_u(int* error);
+extern pid_t      __kclib_fork_u(int* error);
 
 #endif
 
