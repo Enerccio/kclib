@@ -29,7 +29,7 @@ struct jmp_buf {
 typedef struct jmp_buf jmp_buf;
 
 #define setjmp(env) _setjmp(&env)
-#define longjmp(env) _longjmp(&env)
+#define longjmp(env, v) _longjmp(&env, v)
 
 int _setjmp(jmp_buf* env);
 _Noreturn void _longjmp(jmp_buf* env, int val);

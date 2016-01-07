@@ -14,6 +14,7 @@ __set_jump:
 	mov rdx, 0
 	call .jmpcall
 .jmpcall:
+	add rsp, 8
 	mov [rsi], rbp
 	mov [rdi], rsp
 	mov rax, rdx
@@ -32,4 +33,7 @@ __set_jump:
 __long_jump:
 	mov rsp, [rdi]
 	mov rbp, [rsi]
+	pop rcx
+	push 0
+	push rcx
 	ret
