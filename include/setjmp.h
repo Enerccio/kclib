@@ -16,7 +16,23 @@
 extern "C" {
 #endif
 
-#error KCLIB does not support this library yet
+#include <stdint.h>
+#include <stddef.h>
+#include <limits.h>
+#include <stdbool.h>
+#include <stdnoreturn.h>
+
+struct jmp_buf {
+	uintptr_t stack, operation, frame;
+};
+
+typedef struct jmp_buf jmp_buf;
+
+#define setjmp(env) _setjmp(&env)
+#define longjmp(env) _longjmp(&env)
+
+int _setjmp(jmp_buf* env);
+_Noreturn void _longjmp(jmp_buf* env, int val);
 
 #ifdef __cplusplus
 }

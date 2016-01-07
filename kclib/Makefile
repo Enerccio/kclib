@@ -37,13 +37,21 @@ OBJ := $(SRC:.c=.o)
 DEP    := $(SRC:.c=.d)
 -include $(DEP)
 
-.PHONY: all clean crt0 kclib
+.PHONY: all clean crt0 kclib machine machine-clean
 
 all: libc.a
 
 kclib: libc.a
 
-clean:
+machine:
+	$(MAKE) -C machine/$(MACHINE) all CFLAGS="$(CFLAGS)" CPPFLAGS="$(CPPFLAGS)" LDFLAGS="$(LDFLAGS)" \
+	 ASFLAGS="$(ASFLAGS)" AS="$(AS)" CC="$(CC)" AR="$(AR)"
+
+machine-clean:
+	$(MAKE) -C machine/$(MACHINE) clean CFLAGS="$(CFLAGS)" CPPFLAGS="$(CPPFLAGS)" LDFLAGS="$(LDFLAGS)" \
+	 ASFLAGS="$(ASFLAGS)" AS="$(AS)" CC="$(CC)" AR="$(AR)"
+
+clean: machine-clean
 	-rm -f $(OBJ)
 	-rm -f $(wildcard *.d)
 ifeq ($(MODE),user)
@@ -58,8 +66,8 @@ $(MODE)/$(MACHINE)/$(OS)/adapter.o:
 	-@$(CC) $(CFLAGS) $(CPPFLAGS) -I"../include" $< -o $@ $(MODE)/$(MACHINE)/$(OS)/adapter.c ||:
 	-@$(AS) $(MODE)/$(MACHINE)/$(OS)/adapter.s $(ASFLAGS) $< -o $@                           ||:
 
-libc.a: $(OBJ) $(ADAPTER)
-	$(AR) -rcs $(LIBDIR)/$@ $(OBJ) $(ADAPTER)
+libc.a: $(OBJ) $(ADAPTER) machine
+	$(AR) -rcs $(LIBDIR)/$@ $(OBJ) $(wildcard machine/${MACHINE}/*.o) $(ADAPTER)
 	
 crt0:
 	$(MAKE) -C $(MODE)/$(MACHINE)/$(OS) $@ CFLAGS="$(CFLAGS)" CPPFLAGS="$(CPPFLAGS)" LDFLAGS="$(LDFLAGS)" \
