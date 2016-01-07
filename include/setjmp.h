@@ -28,11 +28,11 @@ struct jmp_buf {
 
 typedef struct jmp_buf jmp_buf;
 
-extern int __set_jump(void* stack);
-extern _Noreturn int __long_jump(void* stack, int v);
+extern int setjmp(void* stack) __attribute__((returns_twice));
+extern _Noreturn int longjmp(void* stack, int v);
 
-#define setjmp(env) __set_jump(&env)
-#define longjmp(env, v) __long_jump(&env, v)
+#define setjmp(env) setjmp(&env)
+#define longjmp(env, v) longjmp(&env, v)
 
 #ifdef __cplusplus
 }

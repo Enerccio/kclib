@@ -1,8 +1,7 @@
 [BITS 64]
 
-[GLOBAL __set_jump]
-; extern int __set_jump(void* stack)
-__set_jump:
+[GLOBAL setjmp]
+setjmp:
 	mov rax, 0
 	mov rsi, [rsp]
 	mov [rdi+(8*7)], rsi
@@ -17,9 +16,8 @@ __set_jump:
 	sub rsp, 8
 	ret
 
-[GLOBAL __long_jump]
-; extern _Noreturn int __long_jump(void* stack, int v);
-__long_jump:
+[GLOBAL longjmp]
+longjmp:
 	mov rax, rsi
 	mov rbx, [rdi+(8*0)]
 	mov rbp, [rdi+(8*1)]
