@@ -23,16 +23,16 @@ extern "C" {
 #include <stdnoreturn.h>
 
 struct jmp_buf {
-	uintptr_t stack, frame;
-};
+	uintptr_t rbx, rbp, rsp, r12, r13, r14, r15, rip;
+} __attribute__((packed));
 
 typedef struct jmp_buf jmp_buf;
 
-#define setjmp(env) _setjmp(&env)
-#define longjmp(env, v) _longjmp(&env, v)
+extern int __set_jump(void* stack);
+extern _Noreturn int __long_jump(void* stack, int v);
 
-int _setjmp(jmp_buf* env);
-_Noreturn void _longjmp(jmp_buf* env, int val);
+#define setjmp(env) __set_jump(&env)
+#define longjmp(env, v) __long_jump(&env, v)
 
 #ifdef __cplusplus
 }

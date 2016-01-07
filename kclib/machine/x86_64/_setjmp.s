@@ -1,39 +1,33 @@
 [BITS 64]
 
 [GLOBAL __set_jump]
-; extern int __set_jump(void* stack,void* frame);
+; extern int __set_jump(void* stack)
 __set_jump:
-	push rsp
-	push rbp
-	push rbx
-	push r12
-	push r13
-	push r14
-	push r15
-	sub rsp, 8 ; bogus data to align stack to 16 bytes
-	mov rdx, 0
-	call .jmpcall
-.jmpcall:
+	mov rax, 0
+	mov rsi, [rsp]
+	mov [rdi+(8*7)], rsi
 	add rsp, 8
-	mov [rsi], rbp
-	mov [rdi], rsp
-	mov rax, rdx
-	add rsp, 8
-	pop r15
-	pop r14
-	pop r13
-	pop r12
-	pop rbx
-	pop rbp
-	pop rsp
+	mov [rdi+(8*0)], rbx
+	mov [rdi+(8*1)], rbp
+	mov [rdi+(8*2)], rsp
+	mov [rdi+(8*3)], r12
+	mov [rdi+(8*4)], r13
+	mov [rdi+(8*5)], r14
+	mov [rdi+(8*6)], r15
+	sub rsp, 8
 	ret
 
 [GLOBAL __long_jump]
-; extern _Noreturn int __long_jump(void* stack, void* frame, int v);
+; extern _Noreturn int __long_jump(void* stack, int v);
 __long_jump:
-	mov rsp, [rdi]
-	mov rbp, [rsi]
-	pop rcx
-	push 0
-	push rcx
+	mov rax, rsi
+	mov rbx, [rdi+(8*0)]
+	mov rbp, [rdi+(8*1)]
+	mov rsp, [rdi+(8*2)]
+	mov r12, [rdi+(8*3)]
+	mov r13, [rdi+(8*4)]
+	mov r14, [rdi+(8*5)]
+	mov r15, [rdi+(8*6)]
+	mov rdx, [rdi+(8*7)]
+	push rdx
 	ret
