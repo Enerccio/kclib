@@ -63,7 +63,7 @@ typedef struct lctype {
 /**
  * Collatelly compares next "character" in the streams provided, moving them as appropriate
  */
-int __compare_collate(char** a, char** b);
+int __compare_collate(char** a, char** b) __attribute__((nonnull (1, 2)));
 
 /**
  * Returns ctype table from current locale

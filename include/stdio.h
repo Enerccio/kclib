@@ -41,15 +41,15 @@ extern FILE* stdin;
 int fclose(FILE* stream);
 int fflush(FILE* stream);
 FILE* fopen(const char* restrict filename,
-		const char * restrict mode);
+		const char * restrict mode) __attribute__((nonnull (1, 2)));
 size_t fread(void* restrict ptr,
 		size_t size, size_t nmemb,
-		FILE* restrict stream);
+		FILE* restrict stream) __attribute__((nonnull (1, 4)));
 size_t fwrite(const void* restrict ptr,
 		size_t size, size_t nmemb,
-		FILE* restrict stream);
-int fseek(FILE *stream, long int offset, int whence);
-long int ftell(FILE *stream);
+		FILE* restrict stream) __attribute__((nonnull (1, 4)));
+int fseek(FILE *stream, long int offset, int whence) __attribute__((nonnull (1)));
+long int ftell(FILE *stream) __attribute__((nonnull (1)));
 
 #define BUFSIZ 2048
 
@@ -68,22 +68,23 @@ long int ftell(FILE *stream);
 
 /* _stdio_buffer.h */
 #define __BUF_ERROR_MALLOC_FAILURE 1
-int setbuf(FILE* restrict stream, char* restrict buf);
-int setvbuf(FILE* restrict stream, char* restrict buf, int mode, size_t size);
+int setbuf(FILE* restrict stream, char* restrict buf) __attribute__((nonnull (1)));
+int setvbuf(FILE* restrict stream, char* restrict buf, int mode, size_t size) __attribute__((nonnull (1)));
 
 /* _stdio_printf.c */
 /**
  * Completed stuff: s (no wchar support), c  (no wint support), n, %, d, i, o, u, x, X, p
  * Missing stuff: f, F, e, E, g, G, a, A
  */
-int fprintf(FILE* restrict stream, const char* restrict format, ...);
-int vfprintf(FILE* restrict stream, const char* restrict format, va_list arg);
-int printf(const char* restrict format, ...);
-int vprintf(const char* restrict format, va_list arg);
-int sprintf(char* restrict s, const char* restrict format, ...);
-int vsprintf(char* restrict s, const char* restrict format, va_list arg);
-int snprintf(char* restrict s, size_t n, const char* restrict format, ...);
-int vsnprintf(char* restrict s, size_t n, const char* restrict format, va_list arg);
+int fprintf(FILE* restrict stream, const char* restrict format, ...) __attribute__((nonnull (1)));
+int vfprintf(FILE* restrict stream, const char* restrict format, va_list arg) __attribute__((nonnull (1)));
+int printf(const char* restrict format, ...) __attribute__((nonnull (1)));
+int vprintf(const char* restrict format, va_list arg) __attribute__((nonnull (1)));
+int sprintf(char* restrict s, const char* restrict format, ...) __attribute__((nonnull (1)));
+int vsprintf(char* restrict s, const char* restrict format, va_list arg) __attribute__((nonnull (1)));
+int snprintf(char* restrict s, size_t n, const char* restrict format, ...) __attribute__((nonnull (1)));
+int vsnprintf(char* restrict s, size_t n, const char* restrict format, va_list arg)
+	__attribute__((nonnull (1)));
 
 #ifdef __cplusplus
 }

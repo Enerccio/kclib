@@ -95,7 +95,7 @@ static void* __malloc(size_t size) {
 	return address;
 }
 
-void* malloc(size_t s){
+void* malloc(size_t s) {
 	if (mutex_ready) {
 		mtx_lock(&allocation_mutex);
 	}
@@ -166,7 +166,7 @@ void free(void* ptr){
 	}
 }
 
-void* calloc(size_t nmemb, size_t size){
+void* calloc(size_t nmemb, size_t size) {
 	if (size == 0)
 		return NULL;
 	if (nmemb == 0)
@@ -180,7 +180,7 @@ void* calloc(size_t nmemb, size_t size){
 	return data;
 }
 
-static void* __realloc(void* ptr, size_t size){
+static void* __realloc(void* ptr, size_t size) {
 	aheader_t* chunk = &((aheader_t*)ptr)[-1];
 	if (chunk->size > size && chunk->size-size >= __MINIMUM_CHUNK_SIZE) {
 		__split_chunk(chunk, size);
@@ -197,7 +197,7 @@ static void* __realloc(void* ptr, size_t size){
 	}
 }
 
-void* realloc(void *ptr, size_t size){
+void* realloc(void *ptr, size_t size) {
 	if (size == 0){
 		free(ptr);
 		return NULL;

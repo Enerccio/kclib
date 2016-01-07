@@ -22,9 +22,9 @@ extern "C" {
 #include <sys/external.h>
 
 /* _stdlib_alloc.c */
-void* malloc(size_t size);
-void* calloc(size_t nmemb, size_t size);
-void* realloc(void* ptr, size_t size);
+void* malloc(size_t size) __attribute__((malloc));
+void* calloc(size_t nmemb, size_t size) __attribute__((malloc));
+void* realloc(void* ptr, size_t size) __attribute__((malloc)) __attribute__((nonnull (1)));
 void  free(void* ptr);
 
 /* _stdlib_rand.c */
@@ -42,34 +42,34 @@ void* bsearch(const void* key, const void* base,
 		size_t nmemb, size_t size,
 		int (*compar)(const void *, const void *));
 void qsort(void* base, size_t nmemb, size_t size,
-		int (*compar)(const void *, const void *));
+		int (*compar)(const void *, const void *)) __attribute__((nonnull (1)));
 
 /* _stdlib_numconv.c */
-double atof(const char *nptr);
-int atoi(const char *nptr);
-long int atol(const char *nptr);
-long long int atoll(const char *nptr);
+double atof(const char *nptr) __attribute__((nonnull (1)));
+int atoi(const char *nptr) __attribute__((nonnull (1)));
+long int atol(const char *nptr) __attribute__((nonnull (1)));
+long long int atoll(const char *nptr) __attribute__((nonnull (1)));
 double strtod(const char* restrict nptr,
-		char** restrict endptr);
+		char** restrict endptr) __attribute__((nonnull (1)));
 float strtof(const char* restrict nptr,
-		char** restrict endptr);
+		char** restrict endptr) __attribute__((nonnull (1)));
 long double strtold(const char* restrict nptr,
-		char** restrict endptr);
+		char** restrict endptr) __attribute__((nonnull (1)));
 long int strtol(const char* restrict nptr,
 		char** restrict endptr,
-		int base);
+		int base) __attribute__((nonnull (1)));
 long long int strtoll(const char* restrict nptr,
 		char** restrict endptr,
-		int base);
+		int base) __attribute__((nonnull (1)));
 unsigned long int strtoul(const char* restrict nptr,
 		char** restrict endptr,
-		int base);
+		int base) __attribute__((nonnull (1)));
 unsigned long long int strtoull(const char* restrict nptr,
 		char** restrict endptr,
-		int base);
+		int base) __attribute__((nonnull (1)));
 
 /* _stdlib_envc.c */
-char* getenv(const char* name);
+char* getenv(const char* name) __attribute__((nonnull (1)));
 
 #ifdef __cplusplus
 }
