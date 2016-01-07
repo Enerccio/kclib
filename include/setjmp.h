@@ -23,7 +23,7 @@ extern "C" {
 #include <stdnoreturn.h>
 
 struct jmp_buf {
-	uintptr_t stack, operation, frame;
+	uintptr_t stack, frame;
 };
 
 typedef struct jmp_buf jmp_buf;

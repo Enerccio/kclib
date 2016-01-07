@@ -1,7 +1,7 @@
 [BITS 64]
 
 [GLOBAL __set_jump]
-; extern int __set_jump(void* stack, void* instruction, void* frame);
+; extern int __set_jump(void* stack,void* frame);
 __set_jump:
 	push rsp
 	push rbp
@@ -11,14 +11,12 @@ __set_jump:
 	push r14
 	push r15
 	sub rsp, 8 ; bogus data to align stack to 16 bytes
-	mov rcx, 0
+	mov rdx, 0
 	call .jmpcall
 .jmpcall:
-	mov [rdx], rbp
+	mov [rsi], rbp
 	mov [rdi], rsp
-	mov r9, [rsp]
-	mov [rsi], r9
-	mov rax, rcx
+	mov rax, rdx
 	add rsp, 8
 	pop r15
 	pop r14
@@ -30,8 +28,8 @@ __set_jump:
 	ret
 
 [GLOBAL __long_jump]
-; extern _Noreturn int __long_jump(void* stack, void* instruction, void* frame, int v);
+; extern _Noreturn int __long_jump(void* stack, void* frame, int v);
 __long_jump:
-	mov rsp, [rsi]
-	mov rbp, [rdx]
+	mov rsp, [rdi]
+	mov rbp, [rsi]
 	ret
