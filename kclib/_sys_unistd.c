@@ -1,5 +1,5 @@
 /*
- * sys_unistd.c
+ * _sys_unistd.c
  *
  *  Created on: Jan 6, 2016
  *      Author: enerccio
@@ -20,5 +20,13 @@ pid_t fork(void) {
 		errno = e;
 	}
 	return t;
+#endif
+}
+
+pid_t getpid(void) {
+#ifdef __KCLIB_KERNEL_MODE
+	return 0;
+#else
+	return __kclib_get_pid_u();
 #endif
 }

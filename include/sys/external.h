@@ -71,6 +71,8 @@ extern void       __kclib_terminate_u(int exit_status);
 
 extern pid_t      __kclib_fork_u(int* error);
 
+extern pid_t	  __kclib_get_pid_u();
+
 #endif
 
 /**
