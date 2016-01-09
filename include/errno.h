@@ -31,8 +31,7 @@ extern "C" {
 #define ENOTDIR		 12
 #define ENOEXEC		 13
 #define ELOOP		 14
-#define ENAMETOOLONG 15
-#define ETXTBSY		 16
+#define ETXTBSY		 15
 
 extern int err;
 #define errno err
