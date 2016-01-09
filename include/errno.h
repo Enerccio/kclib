@@ -23,6 +23,7 @@ extern "C" {
 #define EIO			4
 #define ENOPROC		5
 #define ENOMEM		6
+#define EINVALID	7
 
 extern int err;
 #define errno err
