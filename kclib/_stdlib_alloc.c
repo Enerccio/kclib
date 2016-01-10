@@ -130,7 +130,7 @@ static void __free(void* ptr){
 			}
 		}
 
-		nchunk = (aheader_t*)chunk->next_chunk;
+		nchunk = (aheader_t*)nchunk->next_chunk;
 	}
 
 	aheader_t* pchunk;
