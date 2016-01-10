@@ -128,6 +128,8 @@ static void __free(void* ptr){
 			if (nchunk->next_chunk != 0) {
 				((aheader_t*)nchunk)->prev_chunk = (uintptr_t)chunk;
 			}
+		} else {
+			break;
 		}
 
 		nchunk = (aheader_t*)nchunk->next_chunk;
