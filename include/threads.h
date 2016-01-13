@@ -16,8 +16,16 @@
 #include <stdbool.h>
 #include <stdatomic.h>
 #include <stdnoreturn.h>
-#include <sys/types.h>
-#include <assert.h>
+#include <stddef.h>
+
+typedef size_t mtx_id_t;
+typedef size_t pid_t;
+typedef size_t tid_t;
+#define __TID_MAX__ __SIZE_MAX__
+
+#ifndef SSIZE_MAX
+#define SSIZE_MAX INTMAX_MAX
+#endif
 
 #define thread_local _Thread_local;
 #define ONCE_FLAG_INIT (0)

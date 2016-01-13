@@ -13,7 +13,6 @@ extern "C" {
 #endif
 
 #include <stdbool.h>
-#include <sys/stat.h>
 
 #define __STDOUT 1
 #define __STDERR 2
@@ -52,7 +51,6 @@ struct FILE {
 	bool 		closed;
 	bool		lastwrite;
 	bool 		virtual;
-	stat_t* 	stat;
 };
 typedef struct FILE FILE;
 

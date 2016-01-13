@@ -164,23 +164,9 @@ FILE* fopen(const char* restrict filename,
 		return NULL;
 	}
 
-	fp->stat = malloc(sizeof(stat_t));
-	if (fp->stat == NULL){
+	// TODO: add
+	if (setbuf(fp, NULL)){ // default buffer
 		free(fp);
-		return NULL;
-	}
-
-	if (__kclib_fstat_u(fp->handle, fp->stat, &errno)){
-		free(fp->stat);
-		free(fp);
-		return NULL;
-	}
-
-	if (fp->stat != NULL && fp->stat->st_mode == S_IFBLK){
-		if (setbuf(fp, NULL)){ // default buffer
-			free(fp->stat);
-			free(fp);
-		}
 	}
 
 	return fp;

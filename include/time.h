@@ -16,8 +16,11 @@
 extern "C" {
 #endif
 
-#include <sys/types.h>
 #include <stdint.h>
+#include <stddef.h>
+
+typedef uintmax_t time_t;
+typedef size_t    clock_t;
 
 #define CLOCKS_PER_SEC  ((clock_t) 1000000)
 #define CLOCK_REALTIME 0

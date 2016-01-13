@@ -14,7 +14,7 @@
 
 #include <stdint.h>
 #include <stdlib.h>
-#include <sys/stat.h>
+#include <threads.h>
 #include <time.h>
 
 #ifdef __cplusplus
@@ -28,8 +28,6 @@ extern "C" {
 #ifndef __NEWLINE
 #define __NEWLINE '\n'
 #endif
-
-typedef size_t mtx_id_t;
 
 #ifdef __KCLIB_KERNEL_MODE
 
@@ -58,11 +56,6 @@ extern __noreturn __kclib_assert_failure_k(uint32_t lineno, const char* file, co
  * Opens file with mode and path
  */
 extern void*	  __kclib_open_file_u(const char* path, uint32_t mode);
-
-/**
- * Fills the stat parameter for provided descriptor
- */
-extern int		  __kclib_fstat_u(void* descriptor, struct stat* stat, int* errno);
 
 /**
  * Terminates the process
