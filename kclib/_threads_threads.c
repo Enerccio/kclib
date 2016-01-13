@@ -6,6 +6,7 @@
  */
 
 #include <threads.h>
+#include <sys/external.h>
 
 int thrd_create(thrd_t* thr, thrd_start_t func, void* arg) {
 	return thrd_error;

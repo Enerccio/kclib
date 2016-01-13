@@ -6,6 +6,7 @@
  */
 
 #include <threads.h>
+#include <sys/external.h>
 
 int tss_create(tss_t* key, tss_dtor_t dtor) {
 	return thrd_error;

@@ -6,6 +6,7 @@
  */
 
 #include <threads.h>
+#include <sys/external.h>
 #include "intinc/threads.h"
 
 int cnd_broadcast(cnd_t* cond) {

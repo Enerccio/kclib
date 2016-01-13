@@ -6,6 +6,7 @@
  */
 
 #include <threads.h>
+#include <sys/external.h>
 
 void call_once(once_flag* flag, void (*func)(void)) {
 
