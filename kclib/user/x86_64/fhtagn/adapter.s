@@ -33,6 +33,24 @@ __kclib_get_pid_u:
 	int 0x80
 	ret
 
+[GLOBAL __kclib_get_mutex_global_identifier]
+__kclib_get_mutex_global_identifier:
+	mov rax, 8
+	int 0x80
+	ret
+
+[GLOBAL __kclib_mutex_unlocked]
+__kclib_mutex_unlocked:
+	mov rax, 9
+	int 0x80
+	ret
+
+[GLOBAL __kclib_mutex_halt]
+__kclib_mutex_halt:
+	mov rax, 10
+	int 0x80
+	ret
+
 ; TODO: implement
 
 [GLOBAL __kclib_open_file_u]
@@ -67,22 +85,5 @@ __kclib_read_data:
 
 [GLOBAL __kclib_clock]
 __kclib_clock:
-	xor rax, rax
-	ret
-
-[GLOBAL __kclib_halt]
-__kclib_halt:
-	xor rax, rax
-	ret
-
-[GLOBAL __kclib_get_mutex_global_identifier]
-__kclib_get_mutex_global_identifier:
-	; not supported by chtulhuos due to scheduler setup
-	xor rax, rax
-	ret
-
-[GLOBAL __kclib_mutex_unlocked]
-__kclib_mutex_unlocked:
-	; not supported by chtulhuos due to scheduler setup
 	xor rax, rax
 	ret

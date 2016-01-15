@@ -72,7 +72,7 @@ int mtx_lock(mtx_t* mtx) {
 					this_tid, true, __ATOMIC_SEQ_CST, __ATOMIC_SEQ_CST);
 			if (success || mtx_state == this_tid)
 				break;
-			__kclib_halt(mtx->__mtx_external_id);
+			__kclib_mutex_halt(mtx->__mtx_external_id);
 		}
 	} else {
 		int mtx_state;
@@ -82,7 +82,7 @@ int mtx_lock(mtx_t* mtx) {
 								1, true, __ATOMIC_SEQ_CST, __ATOMIC_SEQ_CST);
 			if (success)
 				break;
-			__kclib_halt(mtx->__mtx_external_id);
+			__kclib_mutex_halt(mtx->__mtx_external_id);
 		}
 		__atomic_store_n(&mtx->__mtx_bthread, __kclib_get_tid(), __ATOMIC_SEQ_CST);
 	}

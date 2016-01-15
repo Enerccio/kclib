@@ -119,7 +119,7 @@ extern tid_t __kclib_get_tid();
  *
  * Simplest version would be spinlock.
  */
-extern void __kclib_halt(mtx_id_t __asked_mutex);
+extern void __kclib_mutex_halt(mtx_id_t __asked_mutex);
 /**
  * Informs OS that mutex needs to be unlocked
  */
