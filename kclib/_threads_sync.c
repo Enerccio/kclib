@@ -86,6 +86,7 @@ int mtx_lock(mtx_t* mtx) {
 		}
 		__atomic_store_n(&mtx->__mtx_bthread, __kclib_get_tid(), __ATOMIC_SEQ_CST);
 	}
+	__kclib_mutex_locked(mtx->__mtx_external_id);
 	return thrd_success;
 }
 
@@ -101,9 +102,10 @@ int mtx_trylock(mtx_t* mtx) {
 		tid_t this_tid = __kclib_get_tid();
 		bool success = __atomic_compare_exchange_n(&mtx->__mtx_bthread, &mtx_state,
 							this_tid, true, __ATOMIC_SEQ_CST, __ATOMIC_SEQ_CST);
-		if (success || mtx_state == this_tid)
+		if (success || mtx_state == this_tid) {
+			__kclib_mutex_locked(mtx->__mtx_external_id);
 			return thrd_success;
-		else
+		} else
 			return thrd_busy;
 	} else {
 		int mtx_state = 0;
@@ -112,6 +114,7 @@ int mtx_trylock(mtx_t* mtx) {
 							1, true, __ATOMIC_SEQ_CST, __ATOMIC_SEQ_CST);
 		if (success) {
 			__atomic_store_n(&mtx->__mtx_bthread, __kclib_get_tid(), __ATOMIC_SEQ_CST);
+			__kclib_mutex_locked(mtx->__mtx_external_id);
 			return thrd_success;
 		} else
 			return thrd_busy;

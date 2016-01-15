@@ -39,6 +39,12 @@ __kclib_get_mutex_global_identifier:
 	int 0x80
 	ret
 
+[GLOBAL __kclib_mutex_locked]
+__kclib_mutex_locked:
+	mov rax, 11
+	int 0x80
+	ret
+
 [GLOBAL __kclib_mutex_unlocked]
 __kclib_mutex_unlocked:
 	mov rax, 9

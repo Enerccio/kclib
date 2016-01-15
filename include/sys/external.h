@@ -124,6 +124,10 @@ extern void __kclib_mutex_halt(mtx_id_t __asked_mutex);
  * Informs OS that mutex needs to be unlocked
  */
 extern void __kclib_mutex_unlocked(mtx_id_t __asked_mutex);
+/**
+ * Informs OS that mutex needs to be locked
+ */
+extern void __kclib_mutex_locked(mtx_id_t __asked_mutex);
 
 #ifdef __cplusplus
 }
