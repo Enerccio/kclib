@@ -109,7 +109,7 @@ extern clock_t __kclib_clock();
 extern tid_t __kclib_get_tid();
 
 extern void __kclib_futex_wait(void* futex, int v);
-extern void __kclib_futex_wake(void* futex, int v, bool all);
+extern void __kclib_futex_wake(void* futex, int v);
 
 #ifdef __cplusplus
 }

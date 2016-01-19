@@ -114,7 +114,7 @@ int mtx_unlock(mtx_t* mtx) {
 	}
 
 	mtx->__mtx_state.state.contented = 0;
-	__kclib_futex_wake((void*)&mtx->__mtx_state, 1, true);
+	__kclib_futex_wake((void*)&mtx->__mtx_state, 1);
 
 	return thrd_success;
 }
