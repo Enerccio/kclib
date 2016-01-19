@@ -39,12 +39,12 @@ int mtx_init(mtx_t* mtx, int type) {
 	mtx->__mtx_reentrant = false;
 	mtx->__mtx_timed = false;
 
-	if (type & mtx_recursive != 0) {
+	if ((type & mtx_recursive) != 0) {
 		// TODO
 		return thrd_error;
 	}
 
-	if (type & mtx_timed != 0) {
+	if ((type & mtx_timed) != 0) {
 		// TODO
 		return thrd_error;
 	}

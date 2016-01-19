@@ -8,4 +8,4 @@
 #include <errno.h>
 #include <stdint.h>
 
-int err;
+int __err;

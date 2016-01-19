@@ -32,9 +32,10 @@ extern "C" {
 #define ENOEXEC		 13
 #define ELOOP		 14
 #define ETXTBSY		 15
+#define EWOULDBLOCK	 16
 
-extern int err;
-#define errno err
+extern int __err;
+#define errno __err
 
 #ifdef __cplusplus
 }

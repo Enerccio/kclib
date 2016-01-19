@@ -30,33 +30,17 @@ __kclib_get_pid_u:
 	pop rbx
 	ret
 
-[GLOBAL __kclib_get_mutex_global_identifier]
-__kclib_get_mutex_global_identifier:
+[GLOBAL __kclib_futex_wait]
+__kclib_futex_wait:
 	mov rax, 8
 	push rbx
 	syscall
 	pop rbx
 	ret
 
-[GLOBAL __kclib_mutex_locked]
-__kclib_mutex_locked:
-	mov rax, 11
-	push rbx
-	syscall
-	pop rbx
-	ret
-
-[GLOBAL __kclib_mutex_unlocked]
-__kclib_mutex_unlocked:
+[GLOBAL __kclib_futex_wake]
+__kclib_futex_wake:
 	mov rax, 9
-	push rbx
-	syscall
-	pop rbx
-	ret
-
-[GLOBAL __kclib_mutex_halt]
-__kclib_mutex_halt:
-	mov rax, 10
 	push rbx
 	syscall
 	pop rbx
