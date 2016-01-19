@@ -34,26 +34,22 @@ int cnd_wait(cnd_t* cond, mtx_t* mtx) {
 }
 
 int mtx_init(mtx_t* mtx, int type) {
-	mtx->__mtx_state = 1;
-	mtx->__mtx_value = 0;
+	mtx->__mtx_state.lock = 0;
+	mtx->__mtx_bthread = __TID_MAX__;
+	mtx->__mtx_reentrant = false;
+	mtx->__mtx_timed = false;
 
-	mtx->__mtx_external_id = __kclib_get_mutex_global_identifier();
-	if (mtx->__mtx_external_id == __SIZE_MAX__) {
+	if (type & mtx_recursive != 0) {
+		// TODO
 		return thrd_error;
 	}
 
-	if ((type & mtx_plain) != 0) {
-		mtx->__mtx_timed = false;
-		mtx->__mtx_bthread = __TID_SENTINEL_VALUE;
-		if ((type & mtx_recursive) != 0) {
-			mtx->__mtx_reentrant = true;
-		} else {
-			mtx->__mtx_reentrant = false;
-		}
-		return thrd_success;
+	if (type & mtx_timed != 0) {
+		// TODO
+		return thrd_error;
 	}
 
-	return thrd_error;
+	return thrd_success;
 }
 
 void mtx_destroy(mtx_t* mtx) {
@@ -61,32 +57,20 @@ void mtx_destroy(mtx_t* mtx) {
 }
 
 int mtx_lock(mtx_t* mtx) {
-	if (mtx->__mtx_state != 1)
-		return thrd_error;
-	if (mtx->__mtx_reentrant) {
-		tid_t mtx_state;
-		tid_t this_tid = __kclib_get_tid();
-		while (true) {
-			mtx_state = __TID_SENTINEL_VALUE;
-			bool success = __atomic_compare_exchange_n(&mtx->__mtx_bthread, &mtx_state,
-					this_tid, true, __ATOMIC_SEQ_CST, __ATOMIC_SEQ_CST);
-			if (success || mtx_state == this_tid)
-				break;
-			__kclib_mutex_halt(mtx->__mtx_external_id);
+	for (int i=0; i<100; i++) {
+		if (!__atomic_exchange_n(&mtx->__mtx_state.state.locked, 1, __ATOMIC_SEQ_CST)) {
+			mtx->__mtx_bthread = __kclib_get_tid();
+			return thrd_success;
 		}
-	} else {
-		int mtx_state;
-		while (true) {
-			mtx_state = 0;
-			bool success = __atomic_compare_exchange_n(&mtx->__mtx_state, &mtx_state,
-								1, true, __ATOMIC_SEQ_CST, __ATOMIC_SEQ_CST);
-			if (success)
-				break;
-			__kclib_mutex_halt(mtx->__mtx_external_id);
-		}
-		__atomic_store_n(&mtx->__mtx_bthread, __kclib_get_tid(), __ATOMIC_SEQ_CST);
+
+		__asm__ __volatile__ ("\tpause\n");
 	}
-	__kclib_mutex_locked(mtx->__mtx_external_id);
+
+	while (__atomic_exchange_n(&mtx->__mtx_state.lock, 257, __ATOMIC_SEQ_CST) & 1) {
+		__kclib_futex_wait((void*)&mtx->__mtx_state, 257);
+	}
+
+	mtx->__mtx_bthread = __kclib_get_tid();
 	return thrd_success;
 }
 
@@ -95,53 +79,42 @@ int mtx_timedlock(mtx_t* restrict mtx, const struct timespec* restrict ts) {
 }
 
 int mtx_trylock(mtx_t* mtx) {
-	if (mtx->__mtx_state != 1)
-			return thrd_error;
-	if (mtx->__mtx_reentrant) {
-		tid_t mtx_state = __TID_SENTINEL_VALUE;
-		tid_t this_tid = __kclib_get_tid();
-		bool success = __atomic_compare_exchange_n(&mtx->__mtx_bthread, &mtx_state,
-							this_tid, true, __ATOMIC_SEQ_CST, __ATOMIC_SEQ_CST);
-		if (success || mtx_state == this_tid) {
-			__kclib_mutex_locked(mtx->__mtx_external_id);
-			return thrd_success;
-		} else
-			return thrd_busy;
-	} else {
-		int mtx_state = 0;
-		mtx_state = 0;
-		bool success = __atomic_compare_exchange_n(&mtx->__mtx_state, &mtx_state,
-							1, true, __ATOMIC_SEQ_CST, __ATOMIC_SEQ_CST);
-		if (success) {
-			__atomic_store_n(&mtx->__mtx_bthread, __kclib_get_tid(), __ATOMIC_SEQ_CST);
-			__kclib_mutex_locked(mtx->__mtx_external_id);
-			return thrd_success;
-		} else
-			return thrd_busy;
-	}
+	uint8_t state = __atomic_exchange_n(&mtx->__mtx_state.state.locked, 1, __ATOMIC_SEQ_CST);
+	if (!state)
+		return thrd_success;
+	else
+		return thrd_busy;
 }
 
 int mtx_unlock(mtx_t* mtx) {
 	tid_t this_tid = __kclib_get_tid();
-	if (mtx->__mtx_reentrant) {
-		if (__atomic_exchange_n(&mtx->__mtx_bthread,
-				__TID_SENTINEL_VALUE, __ATOMIC_SEQ_CST) != this_tid) {
-			// unlocked the mutex, but failed to get his own tid back mean some bug
-			return thrd_error;
-		}
-	} else {
-		tid_t mtx_state = __atomic_load_n(&mtx->__mtx_bthread, __ATOMIC_SEQ_CST);
-		if (mtx_state != this_tid) {
-			// trying to unlock other threads process, da fuk
-			return thrd_error;
-		}
-		__atomic_store_n(&mtx->__mtx_bthread, __TID_SENTINEL_VALUE, __ATOMIC_SEQ_CST);
-		if (__atomic_exchange_n(&mtx->__mtx_state,
-				0, __ATOMIC_SEQ_CST) != 1) {
-			// unlocked the mutex, but it was not locked before, which is an error
-			return thrd_error;
-		}
+	tid_t mtx_state = __atomic_load_n(&mtx->__mtx_bthread, __ATOMIC_SEQ_CST);
+
+	if (mtx_state != this_tid) {
+		// trying to unlock other threads process, da fuk
+		return thrd_error;
 	}
-	__kclib_mutex_unlocked(mtx->__mtx_external_id);
+
+	uint32_t expected = 1;
+
+	mtx->__mtx_bthread = __TID_MAX__;
+	if (mtx->__mtx_state.lock == 1 &&
+			__atomic_compare_exchange_n(&mtx->__mtx_state.lock, &expected, 0,
+					false, __ATOMIC_SEQ_CST, __ATOMIC_SEQ_CST))
+		return thrd_success;
+
+	__asm__ __volatile__ ("" : : :"memory");
+
+	for (int i=0; i<200; i++) {
+		if (mtx->__mtx_state.state.locked) {
+			return thrd_success;
+		}
+
+		__asm__ __volatile__ ("\tpause\n");
+	}
+
+	mtx->__mtx_state.state.contented = 0;
+	__kclib_futex_wake((void*)&mtx->__mtx_state, 1, true);
+
 	return thrd_success;
 }

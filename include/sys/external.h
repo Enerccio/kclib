@@ -98,13 +98,6 @@ extern ptrdiff_t  __kclib_read_data(void* stream, uint8_t* buffer, size_t read_a
  */
 extern clock_t __kclib_clock();
 /**
- * Returns some identifier for mutex. __SIZE_MAX__ is returned if mutex global
- * identifier cannot be created.
- *
- * This is used for scheduling purposes (to halt until resource is ready etc)
- */
-extern mtx_id_t __kclib_get_mutex_global_identifier();
-/**
  * Returns identifier of
  *
  * a) current thread, if this is user space library
@@ -114,20 +107,9 @@ extern mtx_id_t __kclib_get_mutex_global_identifier();
  * __SIZE_MAX__ is reserved value
  */
 extern tid_t __kclib_get_tid();
-/**
- * Halts the current process (gives cpu time to other process).
- *
- * Simplest version would be spinlock.
- */
-extern void __kclib_mutex_halt(mtx_id_t __asked_mutex);
-/**
- * Informs OS that mutex needs to be unlocked
- */
-extern void __kclib_mutex_unlocked(mtx_id_t __asked_mutex);
-/**
- * Informs OS that mutex needs to be locked
- */
-extern void __kclib_mutex_locked(mtx_id_t __asked_mutex);
+
+extern void __kclib_futex_wait(void* futex, int v);
+extern void __kclib_futex_wake(void* futex, int v, bool all);
 
 #ifdef __cplusplus
 }

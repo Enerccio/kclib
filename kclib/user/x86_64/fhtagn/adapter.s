@@ -18,10 +18,8 @@ __kclib_deallocate:
 
 [GLOBAL __kclib_get_tid]
 __kclib_get_tid:
-	mov rax, 3
-	push rbx
-	syscall
-	pop rbx
+	mov rax, [gs:0]
+	mov rax, [rax+8] ; tid in tls_t
 	ret
 
 [GLOBAL __kclib_get_pid_u]

@@ -42,7 +42,7 @@ typedef int  (*thrd_start_t)(void*);
 
 #define mtx_plain     (1<<0)
 #define mtx_recursive (1<<1)
-#define mtx_timed     (2<<1)
+#define mtx_timed     (1<<2)
 
 #define thrd_success  0
 #define thrd_timedout 1
@@ -50,21 +50,24 @@ typedef int  (*thrd_start_t)(void*);
 #define thrd_error   -1
 #define thrd_nomem   -2
 
-#define __TID_SENTINEL_VALUE __SIZE_MAX__
 
 struct mtx {
-	/* external id of mutex by os */
-	volatile mtx_id_t  __mtx_external_id;
 	/* internal state of mutex, 1 if valid mutex */
-	volatile int 	   __mtx_state;
+	volatile union {
+		uint32_t lock;
+		struct {
+			uint8_t locked;
+			uint8_t contented;
+		} state;
+	} __mtx_state;
+
 
 	/* type of mutex */
-	volatile bool      __mtx_reentrant;
+	volatile bool      __mtx_reentrant; // TODO
 	volatile bool      __mtx_timed;
 
 	/* mutex lock values */
 	volatile tid_t     __mtx_bthread;
-	volatile int 	   __mtx_value;
 };
 
 struct cnd {

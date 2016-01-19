@@ -21,7 +21,7 @@ static bool mutex_ready = false;
 
 void __initialize_malloc() {
 	malloc_address = NULL;
-	mutex_ready = mtx_init(&allocation_mutex, mtx_plain | mtx_recursive) == thrd_success;
+	mutex_ready = mtx_init(&allocation_mutex, mtx_plain) == thrd_success;
 }
 
 static aheader_t* __extend_heap(size_t size) {
