@@ -16,8 +16,9 @@ int thrd_create(thrd_t* thr, thrd_start_t func, void* arg) {
 }
 
 thrd_t thrd_current(void) {
-#ifdef __KCLIB_KERNEL_MODE
-	return *__kclib_get_thread_structure_addr_u();
+#ifndef __KCLIB_KERNEL_MODE
+	thrd_t* t = __kclib_get_thread_structure_addr_u();
+	return *t;
 #endif
 	return NULL;
 }
