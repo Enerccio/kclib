@@ -10,6 +10,7 @@
 
 #include <sys/external.h>
 
+#ifndef WEAKSYMBOLS
 void* __kclib_open_file_u(const char* path, uint32_t mode) __attribute__((weak));
 void __kclib_terminate_u(int exit_status) __attribute__((weak));
 pid_t __kclib_get_pid_u() __attribute__((weak));
@@ -23,6 +24,7 @@ clock_t __kclib_clock() __attribute__((weak));
 tid_t __kclib_get_tid() __attribute__((weak));
 void __kclib_futex_wait(void* futex, int v) __attribute__((weak));
 void __kclib_futex_wake(void* futex, int v) __attribute__((weak));
+#endif
 
 void ___exit(int x);
 void ___output(const char* message, size_t chlen);

@@ -26,21 +26,31 @@ AS := nasm
 
 PASS := IPATH="../../include" CFLAGS="${CFLAGS}" CPPFLAGS="${CPPFLAGS}" LDFLAGS="${LDFLAGS}" ASFLAGS="${ASFLAGS}" AS="${AS}"
 
-.PHONY: clean all runtests
+SUBDIRS := $(wildcard test_*/.)
+SUBDIREXES := $(wildcard test_*/test)
+SUBDIROS := $(wildcard test_*/*.o)
+
+.PHONY: clean all compilebase cleanbase runtests $(SUBDIRS) $(SUBDIREXES)
 	
 all: runtests
 
 cleanbase:
 	$(MAKE) -C base clean
 
-clean: cleanbase
-	$(MAKE) -C test_sanity $@
+clean: cleanbase 
+	echo "$(SUBDIREXES)"
+	-rm $(SUBDIROS)
+	-rm $(SUBDIREXES)
 	
 compilebase:
 	$(MAKE) -C base $(PASS)
 
-compiletests: compilebase
-	$(MAKE) -C test_sanity $(PASS)
+compiletests: compilebase $(SUBDIRS)
 
-runtests: compiletests
-	test_sanity/./test
+$(SUBDIRS): 
+	$(MAKE) -C $@ $(PASS)
+
+runtests: compiletests $(SUBDIREXES)
+
+$(SUBDIREXES):
+	./$@

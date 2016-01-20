@@ -154,6 +154,14 @@ static void __free(void* ptr){
 			// filled chunk, we are done
 			return;
 		}
+		if ((pchunk->free & ((1<<1))) != 0) {
+					// chunk is free
+			pchunk->size += sizeof(aheader_t) + chunk->size;
+			pchunk->next_chunk = chunk->next_chunk;
+			if (chunk->next_chunk != 0) {
+				((aheader_t*)chunk->next_chunk)->prev_chunk = (uintptr_t)pchunk;
+			}
+		}
 		chunk = (aheader_t*)chunk->prev_chunk;
 	}
 }
