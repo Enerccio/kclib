@@ -16,7 +16,10 @@ int thrd_create(thrd_t* thr, thrd_start_t func, void* arg) {
 }
 
 thrd_t thrd_current(void) {
+#ifdef __KCLIB_KERNEL_MODE
 	return *__kclib_get_thread_structure_addr_u();
+#endif
+	return NULL;
 }
 
 int thrd_detach(thrd_t thr) {
@@ -43,6 +46,7 @@ void thrd_yield(void) {
 
 }
 
+#ifndef __KCLIB_KERNEL_MODE
 void __initialize_threading(thrd_t ct) {
 	ct->pid = __kclib_get_pid_u();
 	ct->tid = __kclib_get_tid();
@@ -50,3 +54,4 @@ void __initialize_threading(thrd_t ct) {
 	thrd_t* saveloc = __kclib_get_thread_structure_addr_u();
 	*saveloc = ct;
 }
+#endif
