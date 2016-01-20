@@ -30,12 +30,17 @@ PASS := IPATH="../../include" CFLAGS="${CFLAGS}" CPPFLAGS="${CPPFLAGS}" LDFLAGS=
 	
 all: runtests
 
-clean:
-	$(MAKE) -C base $@
-	$(MAKE) -C sanity $@
+cleanbase:
+	$(MAKE) -C base clean
 
-compiletests:
+clean: cleanbase
+	$(MAKE) -C test_sanity $@
+	
+compilebase:
 	$(MAKE) -C base $(PASS)
-	$(MAKE) -C sanity $(PASS)
+
+compiletests: compilebase
+	$(MAKE) -C test_sanity $(PASS)
 
 runtests: compiletests
+	test_sanity/./test

@@ -21,7 +21,13 @@ void ___output(const char* message, size_t chlen) {
 	__asm__ __volatile__ (
 			"   syscall"
 			:
-			: "a"(1), "D"((long)0), "S" (message), "rdx" (chlen)
+			: "a"(1), "D"((long)1), "S" (message), "rdx" (chlen)
+			: "cc", "rcx", "r11", "memory"
+	);
+	__asm__ __volatile__ (
+			"   syscall"
+			:
+			: "a"(74), "D"((long)1)
 			: "cc", "rcx", "r11", "memory"
 	);
 }

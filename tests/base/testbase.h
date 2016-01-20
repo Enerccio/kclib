@@ -27,6 +27,9 @@ void __kclib_futex_wake(void* futex, int v) __attribute__((weak));
 void ___exit(int x);
 void ___output(const char* message, size_t chlen);
 
+#define TESTSUITE(name) ___output(__TESTSUITE(name, __DATE__, __TIME__), \
+		sizeof(__TESTSUITE(name, __DATE__, __TIME__)))
+#define __TESTSUITE(name, date, time) "Test suite - " name ", run at " date ", " time "\n"
 #define TEST(testname, fnc, ...) __TEST(fnc, testname, __DATE__, __TIME__, __FILE__, __LINE__, __VA_ARGS__)
 #define __TEST(fnc, testname, date, time, file, line, ...) \
 	do {\

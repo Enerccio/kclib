@@ -13,6 +13,7 @@ bool sanity_test() {
 
 int run_tests() {
 	TESTS_INIT;
+		TESTSUITE("Sanity test");
 		TEST("Checking if environment is sane", sanity_test);
 	TESTS_END;
 }
