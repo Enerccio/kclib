@@ -63,8 +63,8 @@ endif
 	$(CC) -c $(CFLAGS) $(CPPFLAGS) -I"../include" $< -o $@
 
 $(MODE)/$(MACHINE)/$(OS)/adapter.o: 
-	-@$(CC) $(CFLAGS) $(CPPFLAGS) -I"../include" $< -o $@ $(MODE)/$(MACHINE)/$(OS)/adapter.c ||:
-	-@$(AS) $(MODE)/$(MACHINE)/$(OS)/adapter.s $(ASFLAGS) $< -o $@                           ||:
+	-@$(AS) $(MODE)/$(MACHINE)/$(OS)/adapter.s $(ASFLAGS) $< -o $@                              ||:
+	-@$(CC) -c $(CFLAGS) $(CPPFLAGS) -I"../include" $(MODE)/$(MACHINE)/$(OS)/adapter.c -o $@    ||:  
 
 libc.a: $(OBJ) $(ADAPTER) machine
 	$(AR) -rcs $(LIBDIR)/$@ $(OBJ) $(wildcard machine/${MACHINE}/*.o) $(ADAPTER)

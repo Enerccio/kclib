@@ -2,3 +2,5 @@
 /Default/
 /autoscan.log
 /autom4te.cache/
+*.d
+*.o
