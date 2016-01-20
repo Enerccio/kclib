@@ -7,6 +7,7 @@
 
 #include <sys/external.h>
 
+/*
 void* __kclib_open_file_u(const char* path, uint32_t mode) {
 	return NULL;
 }
@@ -58,3 +59,4 @@ void __kclib_futex_wait(void* futex, int v) {
 void __kclib_futex_wake(void* futex, int v) {
 
 }
+*/

@@ -5,6 +5,14 @@
  *      Author: enerccio
  */
 
+#include "../base/testbase.h"
+
+bool sanity_test() {
+	return true;
+}
+
 int run_tests() {
-	return 0;
+	TESTS_INIT;
+		TEST("Checking if environment is sane", sanity_test);
+	TESTS_END;
 }

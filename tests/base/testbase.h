@@ -24,4 +24,27 @@ tid_t __kclib_get_tid() __attribute__((weak));
 void __kclib_futex_wait(void* futex, int v) __attribute__((weak));
 void __kclib_futex_wake(void* futex, int v) __attribute__((weak));
 
+void ___exit(int x);
+void ___output(const char* message, size_t chlen);
+
+#define TEST(testname, fnc, ...) __TEST(fnc, testname, __DATE__, __TIME__, __FILE__, __LINE__, __VA_ARGS__)
+#define __TEST(fnc, testname, date, time, file, line, ...) \
+	do {\
+		if (fnc(__VA_ARGS__) == 1) { \
+			___output(__SUCCESS(testname, date, time, file, line), sizeof(__SUCCESS(testname, date, time, file, line))); \
+		} else { \
+			___output(__FAILURE(testname, date, time, file, line), sizeof(__SUCCESS(testname, date, time, file, line))); \
+			ret = 1; \
+		} \
+	} while (0)
+#define __SUCCESS(testname, date, time, file, line) __GENERAL_INFO(testname, date, time, file, line) "- passed \n"
+#define __FAILURE(testname, date, time, file, line) __GENERAL_INFO(testname, date, time, file, line) "- failed \n"
+#define __GENERAL_INFO(tn, d, ti, fi, li) d ", " ti ": " tn " (at " fi ", " #li ") "
+
+#define TESTS_INIT { \
+	int ret = 0;
+#define TESTS_END \
+	return ret; \
+	}
+
 #endif /* TESTS_BASE_TESTBASE_H_ */
