@@ -62,9 +62,9 @@ extern void*	  __kclib_open_file_u(const char* path, uint32_t mode);
  */
 extern void       __kclib_terminate_u(int exit_status);
 
-extern pid_t      __kclib_fork_u(int* error);
-
 extern pid_t	  __kclib_get_pid_u();
+
+extern thrd_t*    __kclib_get_thread_structure_addr_u();
 
 #endif
 
@@ -109,6 +109,7 @@ extern clock_t __kclib_clock();
 extern tid_t __kclib_get_tid();
 
 extern void __kclib_futex_wait(void* futex, int v);
+
 extern void __kclib_futex_wake(void* futex, int v);
 
 #ifdef __cplusplus

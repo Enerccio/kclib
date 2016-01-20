@@ -6,15 +6,17 @@
  */
 
 #include <threads.h>
+#include <stdlib.h>
 #include <sys/external.h>
+
+#include "intinc/threads.h"
 
 int thrd_create(thrd_t* thr, thrd_start_t func, void* arg) {
 	return thrd_error;
 }
 
 thrd_t thrd_current(void) {
-	thrd_t t;
-	return t;
+	return *__kclib_get_thread_structure_addr_u();
 }
 
 int thrd_detach(thrd_t thr) {
@@ -39,4 +41,12 @@ int thrd_sleep(const struct timespec* duration, struct timespec* remaining) {
 
 void thrd_yield(void) {
 
+}
+
+void __initialize_threading(thrd_t ct) {
+	ct->pid = __kclib_get_pid_u();
+	ct->tid = __kclib_get_tid();
+
+	thrd_t* saveloc = __kclib_get_thread_structure_addr_u();
+	*saveloc = ct;
 }

@@ -33,6 +33,7 @@ extern "C" {
 #define ELOOP		 14
 #define ETXTBSY		 15
 #define EWOULDBLOCK	 16
+#define ETRYAGAIN	 17
 
 extern int __err;
 #define errno __err

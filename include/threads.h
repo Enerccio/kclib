@@ -32,7 +32,7 @@ typedef size_t tid_t;
 #define TSS_DTOR_ITERATIONS (4096)
 
 typedef struct cnd cnd_t;
-typedef tid_t thrd_t;
+typedef struct thrd* thrd_t;
 typedef struct tss tss_t;
 typedef struct mtx mtx_t;
 typedef struct once_flag once_flag;
@@ -49,7 +49,6 @@ typedef int  (*thrd_start_t)(void*);
 #define thrd_busy     2
 #define thrd_error   -1
 #define thrd_nomem   -2
-
 
 struct mtx {
 	/* internal state of mutex, 1 if valid mutex */
@@ -80,6 +79,11 @@ struct tss {
 
 struct once_flag {
 
+};
+
+struct thrd {
+	pid_t pid;
+	tid_t tid;
 };
 
 // _threads_co.c

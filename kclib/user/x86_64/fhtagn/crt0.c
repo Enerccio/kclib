@@ -3,6 +3,7 @@
 #include "../../../intinc/stdlib.h"
 #include "../../../intinc/string.h"
 #include "../../../intinc/shmath.h"
+#include "../../../intinc/threads.h"
 
 #include <stdlib.h>
 #include <sys/external.h>
@@ -15,6 +16,8 @@ char** envp;
 void _start(int argc, char** argv, char** e) {
 	envp = e;
 
+	struct thrd ct;
+	__initialize_threading(&ct);
 	__initialize_malloc();
 	__initialize_locale();
 	__initialize_streams();

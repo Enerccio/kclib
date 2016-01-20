@@ -22,6 +22,12 @@ __kclib_get_tid:
 	mov rax, [rax+8] ; tid in tls_t
 	ret
 
+[GLOBAL __kclib_get_thread_structure_addr_u]
+__kclib_get_thread_structure_addr_u:
+	mov rax, [gs:0]
+	add rax, 16
+	ret
+
 [GLOBAL __kclib_get_pid_u]
 __kclib_get_pid_u:
 	mov rax, 5
