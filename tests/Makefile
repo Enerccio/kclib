@@ -26,9 +26,9 @@ AS := nasm
 
 PASS := IPATH="../../include" CFLAGS="${CFLAGS}" CPPFLAGS="${CPPFLAGS}" LDFLAGS="${LDFLAGS}" ASFLAGS="${ASFLAGS}" AS="${AS}"
 
-SUBDIRS := $(wildcard test_*/.)
-SUBDIREXES := $(wildcard test_*/test)
-SUBDIROS := $(wildcard test_*/*.o)
+SUBDIRS := $(sort $(wildcard test_*/.))
+SUBDIREXES := $(sort $(wildcard test_*/test))
+SUBDIROS := $(sort $(wildcard test_*/*.o))
 
 .PHONY: clean all compilebase cleanbase runtests $(SUBDIRS) $(SUBDIREXES)
 	

@@ -84,6 +84,15 @@ void ___output(const char* message, size_t chlen) {
 	);
 }
 
+void shuffle(void** array, size_t l) {
+	for (size_t i=0; i<l-2; i++) {
+		size_t j = rand()%(l-i);
+		void* tmp = array[i];
+		array[i] = array[i+j];
+		array[i+j] = tmp;
+	}
+}
+
 extern int run_tests();
 int testmain(int argc, char** argv) {
 	return run_tests();

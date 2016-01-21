@@ -52,4 +52,6 @@ void ___output(const char* message, size_t chlen);
 	return ret; \
 	}
 
+void shuffle(void** array, size_t l);
+
 #endif /* TESTS_BASE_TESTBASE_H_ */
