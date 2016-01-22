@@ -17,9 +17,6 @@ size_t itc = 0;
 bool failure = false;
 
 void* __kclib_allocate(size_t aamount) {
-	if (aamount > 8224) {
-		failure = true;
-	}
 	void* rv;
 	__asm__ __volatile__ (
 			"   mov $0x22, %%r10\n"
@@ -35,9 +32,6 @@ void* __kclib_allocate(size_t aamount) {
 }
 
 void __kclib_deallocate(uintptr_t afrom, size_t aamount) {
-	if (aamount > 8224) {
-		failure = true;
-	}
 
 	bool f = true;
 	for (int i=0; i<TEST_COUNT; i++) {

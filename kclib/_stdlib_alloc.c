@@ -2,9 +2,18 @@
 #include <threads.h>
 #include "intinc/stdlib.h"
 
+#define HEADER_MAGIC (0b011001)
+
 typedef struct aheader {
 	uintptr_t prev_chunk;
-	uintptr_t free;
+	union {
+		struct {
+			uintptr_t magic : 6;
+			uintptr_t free  : 1;
+			uintptr_t chunk : 1;
+		} flags;
+		uintptr_t _;
+	} flags;
 	size_t    size;
 	uintptr_t next_chunk;
 } __attribute__((__packed__)) aheader_t;
@@ -34,7 +43,10 @@ static aheader_t* __extend_heap(size_t size) {
 		return NULL;
 
 	aheader_t* header = (aheader_t*)new_chunk;
-	header->free = 1<<1;
+	header->flags._ = 0;
+	header->flags.flags.free = 1;
+	header->flags.flags.chunk = 1;
+	header->flags.flags.magic = HEADER_MAGIC;
 	header->size = size-sizeof(aheader_t);
 	header->next_chunk = 0;
 	header->prev_chunk = 0;
@@ -44,25 +56,27 @@ static aheader_t* __extend_heap(size_t size) {
 
 static void __split_chunk(aheader_t* chunk, size_t size) {
 	aheader_t* next_chunk = (aheader_t*)
-			(((uintptr_t)chunk)+sizeof(aheader_t)+size);
-	next_chunk->size = chunk->size - size - sizeof(aheader_t);
-	next_chunk->free = 1<<1;
+			(((uintptr_t)chunk)+sizeof(aheader_t)+(chunk->size - size));
+	next_chunk->size = size - sizeof(aheader_t);
+	next_chunk->flags.flags.free = 1;
+	next_chunk->flags.flags.chunk = 0;
+	next_chunk->flags.flags.magic = HEADER_MAGIC;
 	next_chunk->prev_chunk = (uintptr_t) chunk;
 	next_chunk->next_chunk = chunk->next_chunk;
 	if (chunk->next_chunk != 0)
 		((aheader_t*)chunk->next_chunk)->prev_chunk = (uintptr_t)next_chunk;
 	chunk->next_chunk = (uintptr_t)next_chunk;
-	chunk->size = size;
+	chunk->size -= size;
 }
 
 static void* __malloc(size_t size) {
-	size_t total_size = size + sizeof(aheader_t);
+	size_t total_size = size + sizeof(aheader_t) + 16;
 
 	aheader_t** chunk = &malloc_address;
 	aheader_t* free_chunk = NULL;
 	aheader_t* pc = NULL;
 	while ((*chunk) != NULL) {
-		if ((((*chunk)->free & ((1<<1))) != 0) && (*chunk)->size>=total_size) {
+		if ((*chunk)->flags.flags.free && (*chunk)->size>=total_size) {
 			free_chunk = *chunk;
 			break;
 		}
@@ -77,16 +91,21 @@ static void* __malloc(size_t size) {
 			return NULL;
 
 		free_chunk = *chunk;
-		free_chunk->free |= (1<<2);
 		if (pc != NULL) {
 			pc->next_chunk = (uintptr_t)free_chunk;
 			free_chunk->prev_chunk = (uintptr_t)pc;
 		}
 	}
 
-	free_chunk->free &= ~(1<<1);
-	if (free_chunk->size - size >= __MINIMUM_CHUNK_SIZE) {
-		__split_chunk(free_chunk, size);
+	free_chunk->flags.flags.free = 0;
+	uintptr_t pos = ((uintptr_t)free_chunk);
+	pos += size;
+	pos = __ALIGN_UP(pos, 16);
+	pos -= ((uintptr_t)free_chunk);
+
+	size_t remaining_size = free_chunk->size - pos;
+	if (remaining_size >= __MINIMUM_CHUNK_SIZE) {
+		__split_chunk(free_chunk, remaining_size);
 	}
 
 	void* address = (void*) (((uintptr_t)free_chunk) + sizeof(aheader_t));
@@ -108,7 +127,10 @@ void* malloc(size_t s) {
 
 static void __free(void* ptr){
 	aheader_t* chunk = &((aheader_t*)ptr)[-1];
-	chunk->free |= (1<<1);
+	if (chunk->flags.flags.magic != HEADER_MAGIC) {
+		return; // TODO: abort
+	}
+	chunk->flags.flags.free = 1;
 	memset(ptr, 0xCD, chunk->size);
 
 	aheader_t* nchunk = (aheader_t*)chunk->next_chunk;
@@ -117,11 +139,11 @@ static void __free(void* ptr){
 		if (nchunk == 0)
 			break;
 		lvchunk = nchunk;
-		if ((nchunk->free & ((1<<2))) != 0) {
+		if (nchunk->flags.flags.chunk) {
 			// next is allocator chunk, stop this
 			break;
 		}
-		if ((nchunk->free & ((1<<1))) != 0) {
+		if (nchunk->flags.flags.free) {
 			// chunk is free
 			chunk->size += sizeof(aheader_t) + nchunk->size;
 			chunk->next_chunk = nchunk->next_chunk;
@@ -140,9 +162,9 @@ static void __free(void* ptr){
 	aheader_t* pchunk;
 	while (true) {
 		pchunk = (aheader_t*)chunk->prev_chunk;
-		if (pchunk == NULL || ((chunk->free & ((1<<2))) != 0)) {
+		if (pchunk == NULL || chunk->flags.flags.chunk) {
 			// this is first chunk or NULL
-			if (lvchunk == NULL || ((lvchunk->free & ((1<<2))) != 0)) {
+			if (lvchunk == NULL || lvchunk->flags.flags.chunk) {
 				if (pchunk == NULL) {
 					malloc_address = lvchunk;
 					if (lvchunk != NULL) {
@@ -158,11 +180,11 @@ static void __free(void* ptr){
 			}
 			return;
 		}
-		if ((chunk->free & ((1<<1))) == 0) {
+		if (chunk->flags.flags.free) {
 			// filled chunk, we are done
 			return;
 		}
-		if ((pchunk->free & ((1<<1))) != 0) {
+		if (!pchunk->flags.flags.free) {
 			// chunk is free
 			pchunk->size += sizeof(aheader_t) + chunk->size;
 			pchunk->next_chunk = (uintptr_t)lvchunk;
