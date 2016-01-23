@@ -76,6 +76,11 @@ static void* __malloc(size_t size) {
 	aheader_t* free_chunk = NULL;
 	aheader_t* pc = NULL;
 	while ((*chunk) != NULL) {
+		if ((*chunk)->flags.flags.magic != HEADER_MAGIC) {
+			// TODO: Abort
+			return 0;
+		}
+
 		if ((*chunk)->flags.flags.free && (*chunk)->size>=total_size) {
 			free_chunk = *chunk;
 			break;
@@ -146,6 +151,7 @@ static void __free(void* ptr){
 		if (nchunk->flags.flags.free) {
 			// chunk is free
 			chunk->size += sizeof(aheader_t) + nchunk->size;
+			nchunk->flags.flags.magic = 0;
 			chunk->next_chunk = nchunk->next_chunk;
 			if (nchunk->next_chunk != 0) {
 				((aheader_t*)nchunk->next_chunk)->prev_chunk = (uintptr_t)chunk;
@@ -162,6 +168,10 @@ static void __free(void* ptr){
 	aheader_t* pchunk;
 	while (true) {
 		pchunk = (aheader_t*)chunk->prev_chunk;
+		if (!chunk->flags.flags.free) {
+			// filled chunk, we are done
+			return;
+		}
 		if (pchunk == NULL || chunk->flags.flags.chunk) {
 			// this is first chunk or NULL
 			if (lvchunk == NULL || lvchunk->flags.flags.chunk) {
@@ -180,14 +190,11 @@ static void __free(void* ptr){
 			}
 			return;
 		}
-		if (chunk->flags.flags.free) {
-			// filled chunk, we are done
-			return;
-		}
-		if (!pchunk->flags.flags.free) {
+		if (pchunk->flags.flags.free) {
 			// chunk is free
 			pchunk->size += sizeof(aheader_t) + chunk->size;
 			pchunk->next_chunk = (uintptr_t)lvchunk;
+			chunk->flags.flags.magic = 0;
 			if (lvchunk != NULL) {
 				lvchunk->prev_chunk = (uintptr_t)pchunk;
 			}
@@ -222,8 +229,16 @@ void* calloc(size_t nmemb, size_t size) {
 
 static void* __realloc(void* ptr, size_t size) {
 	aheader_t* chunk = &((aheader_t*)ptr)[-1];
-	if (chunk->size > size && chunk->size-size >= __MINIMUM_CHUNK_SIZE) {
-		__split_chunk(chunk, size);
+
+	uintptr_t pos = ((uintptr_t)chunk);
+	pos += size;
+	pos = __ALIGN_UP(pos, 16);
+	pos -= ((uintptr_t)chunk);
+
+	size_t remaining_size = chunk->size - pos;
+
+	if (chunk->size > size && remaining_size >= __MINIMUM_CHUNK_SIZE) {
+		__split_chunk(chunk, remaining_size);
 		return ptr;
 	} else if (chunk->size >= size){
 		return ptr;

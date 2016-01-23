@@ -66,6 +66,7 @@ bool endcheck() {
 }
 
 bool malloc_simple_test() {
+	itc = 0;
 	void* addr = malloc(0x2000);
 	srand((uintptr_t)addr);
 	free(addr);
@@ -74,12 +75,13 @@ bool malloc_simple_test() {
 }
 
 bool malloc_mf_complex_test() {
+	itc = 0;
 	void* array[TEST_COUNT/NUMTESTS];
 	for (int i=0; i<TEST_COUNT/NUMTESTS; i++)
 		array[i] = 0;
 
 	for (int i=0; i<TEST_COUNT/NUMTESTS; i++) {
-		array[i] = malloc((rand()%0x2000));
+		array[i] = malloc(((rand()+1)%0x2000));
 	}
 
 	for (int i=0; i<TEST_COUNT/NUMTESTS; i++) {
@@ -90,12 +92,38 @@ bool malloc_mf_complex_test() {
 }
 
 bool malloc_mf_complex_random_test() {
+	itc = 0;
 	void* array[TEST_COUNT/NUMTESTS];
 	for (int i=0; i<TEST_COUNT/NUMTESTS; i++)
 		array[i] = 0;
 
 	for (int i=0; i<TEST_COUNT/NUMTESTS; i++) {
-		array[i] = malloc((rand()%0x2000));
+		array[i] = malloc(((rand()+1)%0x2000));
+	}
+
+	shuffle(array, TEST_COUNT/NUMTESTS);
+
+	for (int i=0; i<TEST_COUNT/NUMTESTS; i++) {
+		free(array[i]);
+	}
+
+	return endcheck();
+}
+
+bool malloc_realloc_test() {
+	itc = 0;
+	void* array[TEST_COUNT/NUMTESTS];
+	for (int i=0; i<TEST_COUNT/NUMTESTS; i++)
+		array[i] = 0;
+
+	for (int i=0; i<TEST_COUNT/NUMTESTS; i++) {
+		array[i] = malloc(((rand()+1)%0x2000));
+	}
+
+	shuffle(array, TEST_COUNT/NUMTESTS);
+
+	for (int i=0; i<TEST_COUNT/NUMTESTS; i++) {
+		array[i] = realloc(array[i], ((rand()+1)%0x2000));
 	}
 
 	shuffle(array, TEST_COUNT/NUMTESTS);
@@ -115,5 +143,6 @@ int run_tests() {
 		TEST("Checking malloc/free simple test", malloc_simple_test);
 		TEST("Checking malloc/free complex test", malloc_mf_complex_test);
 		TEST("Checking malloc/free complex random order test", malloc_mf_complex_random_test);
+		TEST("Checking realloc test", malloc_realloc_test);
 	TESTS_END;
 }
