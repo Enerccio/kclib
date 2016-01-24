@@ -30,7 +30,7 @@ __kclib_get_thread_structure_addr_u:
 
 [GLOBAL __kclib_get_pid_u]
 __kclib_get_pid_u:
-	mov rax, 5
+	mov rax, 4
 	push rbx
 	syscall
 	pop rbx
