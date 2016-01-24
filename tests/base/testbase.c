@@ -69,17 +69,17 @@ void ___exit(int x) {
 	);
 }
 
-void ___output(const char* message, size_t chlen) {
+void ___output(const char* message, size_t chlen, bool err) {
 	__asm__ __volatile__ (
 			"   syscall"
 			:
-			: "a"(1), "D"((long)2), "S" (message), "rdx" (chlen)
+			: "a"(1), "D"((long)err? 2 : 0), "S" (message), "rdx" (chlen)
 			: "cc", "rcx", "r11", "memory"
 	);
 	__asm__ __volatile__ (
 			"   syscall"
 			:
-			: "a"(74), "D"((long)2)
+			: "a"(74), "D"((long)err? 2 : 0)
 			: "cc", "rcx", "r11", "memory"
 	);
 }

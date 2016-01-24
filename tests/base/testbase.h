@@ -9,6 +9,7 @@
 #define TESTS_BASE_TESTBASE_H_
 
 #include <sys/external.h>
+#include <stdbool.h>
 
 #ifndef WEAKSYMBOLS
 void* __kclib_open_file_u(const char* path, uint32_t mode) __attribute__((weak));
@@ -27,18 +28,18 @@ void __kclib_futex_wake(void* futex, int v) __attribute__((weak));
 #endif
 
 void ___exit(int x);
-void ___output(const char* message, size_t chlen);
+void ___output(const char* message, size_t chlen, bool err);
 
 #define TESTSUITE(name) ___output(__TESTSUITE(name, __DATE__, __TIME__), \
-		sizeof(__TESTSUITE(name, __DATE__, __TIME__)))
+		sizeof(__TESTSUITE(name, __DATE__, __TIME__)), 1)
 #define __TESTSUITE(name, date, time) "Test suite - " name ", run at " date ", " time "\n"
 #define TEST(testname, fnc, ...) __TEST(fnc, testname, __DATE__, __TIME__, __FILE__, __LINE__, __VA_ARGS__)
 #define __TEST(fnc, testname, date, time, file, line, ...) \
 	do {\
 		if (fnc(__VA_ARGS__) == 1) { \
-			___output(__SUCCESS(testname, date, time, file, line), sizeof(__SUCCESS(testname, date, time, file, line))); \
+			___output(__SUCCESS(testname, date, time, file, line), sizeof(__SUCCESS(testname, date, time, file, line)), 0); \
 		} else { \
-			___output(__FAILURE(testname, date, time, file, line), sizeof(__SUCCESS(testname, date, time, file, line))); \
+			___output(__FAILURE(testname, date, time, file, line), sizeof(__SUCCESS(testname, date, time, file, line)), 1); \
 			ret = 1; \
 		} \
 	} while (0)

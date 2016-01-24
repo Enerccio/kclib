@@ -76,11 +76,6 @@ static void* __malloc(size_t size) {
 	aheader_t* free_chunk = NULL;
 	aheader_t* pc = NULL;
 	while ((*chunk) != NULL) {
-		if ((*chunk)->flags.flags.magic != HEADER_MAGIC) {
-			// TODO: Abort
-			return 0;
-		}
-
 		if ((*chunk)->flags.flags.free && (*chunk)->size>=total_size) {
 			free_chunk = *chunk;
 			break;
@@ -132,9 +127,6 @@ void* malloc(size_t s) {
 
 static void __free(void* ptr){
 	aheader_t* chunk = &((aheader_t*)ptr)[-1];
-	if (chunk->flags.flags.magic != HEADER_MAGIC) {
-		return; // TODO: abort
-	}
 	chunk->flags.flags.free = 1;
 	memset(ptr, 0xCD, chunk->size);
 
