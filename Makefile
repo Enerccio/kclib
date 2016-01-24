@@ -15,7 +15,7 @@ crt0:
 tests: compiletests runtests
 
 compiletests:
-	$(MAKE) -C kclib crt0 SYSROOT=../../../
+	$(MAKE) -C kclib crt0
 	$(MAKE) -C tests compiletests
 	
 runtests:
