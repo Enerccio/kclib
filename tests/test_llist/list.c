@@ -7,6 +7,8 @@
 
 #include "list.h"
 
+LLIST_FUNCDEFS(int)
+
 int run_tests() {
 	TESTS_INIT;
 		TESTSUITE("linked list test");

@@ -135,6 +135,25 @@ bool malloc_realloc_test() {
 	return endcheck();
 }
 
+bool malloc_mini_test() {
+	itc = 0;
+	void* array[TEST_COUNT/NUMTESTS];
+	for (int i=0; i<TEST_COUNT/NUMTESTS; i++)
+		array[i] = 0;
+
+	for (int i=0; i<TEST_COUNT/NUMTESTS; i++) {
+		array[i] = malloc(20);
+	}
+
+	shuffle(array, TEST_COUNT/NUMTESTS);
+
+	for (int i=0; i<TEST_COUNT/NUMTESTS; i++) {
+		free(array[i]);
+	}
+
+	return endcheck();
+}
+
 int run_tests() {
 	TESTS_INIT;
 		TESTSUITE("_stdlib_alloc test");
@@ -144,5 +163,6 @@ int run_tests() {
 		TEST("Checking malloc/free complex test", malloc_mf_complex_test);
 		TEST("Checking malloc/free complex random order test", malloc_mf_complex_random_test);
 		TEST("Checking realloc test", malloc_realloc_test);
+		TEST("Checking minialloc test", malloc_mini_test);
 	TESTS_END;
 }

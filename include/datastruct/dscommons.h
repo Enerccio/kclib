@@ -31,9 +31,9 @@ typedef REGISTER_UINT_TYPE ruint_t;
 #define VALUE_DEALLOC_FUNC_TYPE(type) value_deallocator_func ## type ## _t
 #define VALUE_DEALLOC_FUNC(type) typedef void (*VALUE_DEALLOC_FUNC_TYPE(type))(type a)
 #define HASH_FUNC_TYPE(type) hash_function_ ## type ## _t
-#define HASH_FUNC(type) typedef uint32_t (* HASH_FUNC_TYPE(type)) (type key);
+#define HASH_FUNC(type) typedef uint32_t (* HASH_FUNC_TYPE(type)) (type key)
 #define EQ_FUNC_TYPE(type) eq_function_ ## type ## _t
-#define EQ_FUNC(type) typedef bool (* EQ_FUNC_TYPE(type)) (type key_a, type key_b);
+#define EQ_FUNC(type) typedef bool (* EQ_FUNC_TYPE(type)) (type key_a, type key_b)
 
 /* Concrete func definitions */
 uint32_t uint32_hash_function(uint32_t integer);
@@ -42,6 +42,17 @@ uint32_t uint64_hash_function(uint64_t integer);
 bool uint64_eq_function(uint64_t a, uint64_t b);
 uint32_t string_hash_function(char* string);
 bool string_eq_function(char* a, char* b);
+
+#define CE_TYPE(type) __chained_element_ ## type ## _s
+#define CE_TYPEDEF(type) \
+	struct CE_TYPE(type) { \
+		struct CE_TYPE(type)* previous; \
+		struct CE_TYPE(type)* next; \
+		type                  data; \
+		uint32_t			  pq; \
+	}
+#define CE_ELEMENT_GETTER_TYPE(type) ce_getter_ ## type ## _t
+#define CE_ELEMENT_GETTER(type) typedef struct CE_TYPE(type)* (*CE_ELEMENT_GETTER_TYPE(type))(type data)
 
 #ifdef __cplusplus
 }
