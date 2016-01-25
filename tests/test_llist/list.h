@@ -14,7 +14,11 @@
 #include <stdlib.h>
 #include <datastruct/llist.h>
 
+typedef void* void_ptr_t;
+
 LLIST_HEADER(int)
+LLIST_HEADER(uint64_t)
+LLIST_HEADER(void_ptr_t)
 
 
 #endif /* TESTS_TEST_LLIST_LIST_H_ */
