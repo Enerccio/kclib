@@ -5,8 +5,8 @@
  *      Author: pvan
  */
 
-#ifndef TESTS_TEST_LLIST_LIST_H_
-#define TESTS_TEST_LLIST_LIST_H_
+#ifndef TESTS_TEST_DS_LIST_H_
+#define TESTS_TEST_DS_LIST_H_
 
 #define WEAKSYMBOLS
 #include "../base/testbase.h"
@@ -20,5 +20,4 @@ LLIST_HEADER(int)
 LLIST_HEADER(uint64_t)
 LLIST_HEADER(void_ptr_t)
 
-
-#endif /* TESTS_TEST_LLIST_LIST_H_ */
+#endif /* TESTS_TEST_DS_LIST_H_ */

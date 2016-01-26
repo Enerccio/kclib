@@ -6,6 +6,7 @@
  */
 
 #include <datastruct/dscommons.h>
+#include <datastruct/random.h>
 
 /******************************************************************************//**
  * \brief Converts uint32_t passed in as void* into hash
@@ -69,4 +70,39 @@ uint32_t string_hash_function(char* str) {
  ********************************************************************************/
 bool string_eq_function(char* a, char* b) {
     return strcmp(a, b) == 0;
+}
+
+/******************************************************************************//**
+ * \brief Creates random generator state.
+ *
+ * Random generator state is seeded with provided seed.
+ ********************************************************************************/
+rg_t rg_create_random_generator(uint64_t seed) {
+    rg_t rg;
+    rg.state[0] = (seed = (seed * 2862933555777941757 + 3037000493));
+    rg.state[1] = (seed * 2862933555777941757 + 3037000493);
+    return rg;
+}
+
+/******************************************************************************//**
+ * \brief Returns next random unsigned int value.
+ *
+ * Int type is ruint_t, which is register sized uint.
+ ********************************************************************************/
+ruint_t rg_next_uint(rg_t* rg) {
+    ruint_t x = rg->state[0];
+    ruint_t const y = rg->state[1];
+    rg->state[0] = y;
+    x ^= x << 23; // a
+    rg->state[1] = x ^ y ^ (x >> 17) ^ (y >> 26); // b, c
+    return rg->state[1] + y;
+}
+
+/******************************************************************************//**
+ * \brief Returns next random unsigned int from 0 to limit.
+ *
+ * Int type is ruint_t, which is register sized uint.
+ ********************************************************************************/
+ruint_t rg_next_uint_l(rg_t* rg, ruint_t limit) {
+    return rg_next_uint(rg) % limit;
 }
