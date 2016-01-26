@@ -109,7 +109,6 @@ static void* __malloc(size_t size) {
 	}
 
 	void* address = (void*) (((uintptr_t)free_chunk) + sizeof(aheader_t));
-	memset(address, 0xDC, size);
 
 	return address;
 }
