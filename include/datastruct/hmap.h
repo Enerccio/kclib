@@ -26,7 +26,7 @@ typedef enum state {
 typedef uint32_t hash_it_t;
 
 #define HMAP_TYPE(typek, typev) __hmap_ ## typek ## typev ## _t
-#define HMAP_PTYPE(typek, typev) __hmap_pair_ ## typek ## typev ## _iter_t
+#define HMAP_PTYPE(typek, typev) __hmap_pair_ ## typek ## typev ## _t
 
 #define HMAP_HEADER(keyt, valuet) \
 HASH_FUNC(keyt); \
