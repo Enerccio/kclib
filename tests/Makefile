@@ -38,7 +38,6 @@ cleanbase:
 	$(MAKE) -C base clean
 
 clean: cleanbase 
-	echo "$(SUBDIREXES)"
 	-rm $(SUBDIROS)
 	-rm $(SUBDIREXES)
 	

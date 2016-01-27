@@ -8,7 +8,6 @@
 #ifndef INCLUDE_DATASTRUCT_LLIST_H_
 #define INCLUDE_DATASTRUCT_LLIST_H_
 
-
 #ifdef __cplusplus
 extern "C" {
 #endif

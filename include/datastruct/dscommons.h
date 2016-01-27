@@ -22,6 +22,8 @@ extern "C" {
 #endif
 typedef REGISTER_UINT_TYPE ruint_t;
 
+typedef char* string;
+
 #define SEARCH_PREDICATE_TYPE(type) search_predicate_ ## type ## _t
 #define SEARCH_PREDICATE(type) typedef bool (* SEARCH_PREDICATE_TYPE(type))(type element, void* passed_data)
 #define CMP_FUNC_TYPE(type) cmp_func_ ## type ## _t
@@ -40,8 +42,8 @@ uint32_t uint32_hash_function(uint32_t integer);
 bool uint32_eq_function(uint32_t a, uint32_t b);
 uint32_t uint64_hash_function(uint64_t integer);
 bool uint64_eq_function(uint64_t a, uint64_t b);
-uint32_t string_hash_function(char* string);
-bool string_eq_function(char* a, char* b);
+uint32_t string_hash_function(string string);
+bool string_eq_function(string a, string b);
 
 #define CE_TYPE(type) __chained_element_ ## type ## _s
 #define CE_TYPEDEF(type) \
