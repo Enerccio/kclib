@@ -47,10 +47,20 @@ bool fpclassify_test() {
 	return true;
 }
 
+bool sincos_test() {
+	float sinfv = sinf(2);
+	double sindv = sin(2);
+	if (sinfv != sindv)
+		return false;
+
+	return true;
+}
+
 int run_tests() {
 	TESTS_INIT;
 		TESTSUITE("Math test");
 		TEST("Checking signbit of different types", signbit_test);
 		TEST("Checking fpclassify of different types", fpclassify_test);
+		TEST("Sin/cos test", sincos_test);
 	TESTS_END;
 }

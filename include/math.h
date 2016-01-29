@@ -100,6 +100,14 @@ int __signbit_d(double x);
 
 #define signbit(x) ((sizeof(x) == sizeof(float)) ? __signbit_f(x) : __signbit_d(x))
 
+// _math_gonio.c
+double sin(double x) __WEAK_SYMBOL;
+float sinf(float x) __WEAK_SYMBOL;
+
+// _math_powabs.c
+double pow(double x, double y) __WEAK_SYMBOL;
+float powf(float x, float y) __WEAK_SYMBOL;
+
 #undef __WEAK_SYMBOL
 
 #ifdef __cplusplus
