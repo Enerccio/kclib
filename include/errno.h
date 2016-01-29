@@ -16,6 +16,8 @@
 extern "C" {
 #endif
 
+#include <sys/kclib.h>
+
 #define EDEFAULTERR  0
 #define EDOM		 1
 #define EILSEQ		 2

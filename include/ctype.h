@@ -16,6 +16,8 @@
 extern "C" {
 #endif
 
+#include <sys/kclib.h>
+
 int isalnum(int c);
 int isalpha(int c);
 int isblank(int c);

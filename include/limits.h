@@ -16,6 +16,8 @@
 extern "C" {
 #endif
 
+#include <sys/kclib.h>
+
 #ifdef _MB_LEN_MAX
 #define MB_LEN_MAX	_MB_LEN_MAX
 #else
@@ -101,6 +103,12 @@ extern "C" {
 #endif
 #endif
 #endif
+#endif
+
+#ifdef __SIZE_MAX__
+#define SIZE_MAX __SIZE_MAX__
+#else
+#define SIZE_MAX (__STDINT_EXP(LONG_MAX) * 2UL + 1)
 #endif
 
 #ifdef __cplusplus

@@ -16,6 +16,8 @@
 extern "C" {
 #endif
 
+#include <sys/kclib.h>
+
 /* This needs to be called by kernel before using functions from this libc.
  * Calling any function before calling this function results in
  * undefined behavior. */

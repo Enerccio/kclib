@@ -12,6 +12,7 @@
 #include <gcc_defs.h>
 #endif
 
+#include <sys/kclib.h>
 #include <sys/unistd.h>
 
 #endif /* UNISTD_H_ */

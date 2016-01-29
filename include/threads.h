@@ -12,6 +12,7 @@
 #include <gcc_defs.h>
 #endif
 
+#include <sys/kclib.h>
 #include <time.h>
 #include <stdbool.h>
 #include <stdatomic.h>

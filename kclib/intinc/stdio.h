@@ -52,7 +52,8 @@ struct FILE {
 	bool		lastwrite;
 	bool 		virtual;
 };
-typedef struct FILE FILE;
+
+#include <fragments/_file.h>
 
 /* _stdio_file.c */
 /**

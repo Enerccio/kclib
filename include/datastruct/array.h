@@ -12,6 +12,7 @@
 extern "C" {
 #endif
 
+#include <sys/kclib.h>
 #include <datastruct/dscommons.h>
 #include <datastruct/random.h>
 

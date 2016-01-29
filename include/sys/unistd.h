@@ -8,6 +8,6 @@
 #ifndef INCLUDE_SYS_UNISTD_H_
 #define INCLUDE_SYS_UNISTD_H_
 
-
+#include <sys/kclib.h>
 
 #endif /* INCLUDE_SYS_UNISTD_H_ */

@@ -7,6 +7,7 @@
 
 #include "list.h"
 #include "array.h"
+#include "hmap.h"
 
 int run_tests() {
 	TESTS_INIT;

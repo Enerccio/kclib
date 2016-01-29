@@ -12,6 +12,7 @@
 extern "C" {
 #endif
 
+#include <sys/kclib.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>

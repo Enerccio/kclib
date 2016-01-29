@@ -16,6 +16,8 @@
 extern "C" {
 #endif
 
+#include <sys/kclib.h>
+
 #define and &&
 #define and_eq &=
 #define bitand &

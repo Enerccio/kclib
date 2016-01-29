@@ -16,6 +16,7 @@
 extern "C" {
 #endif
 
+#include <sys/kclib.h>
 #include <stdint.h>
 #include <stddef.h>
 #include <limits.h>

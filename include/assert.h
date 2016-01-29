@@ -16,6 +16,7 @@
 extern "C" {
 #endif
 
+#include <sys/kclib.h>
 #include <sys/external.h>
 #ifndef __KCLIB_KERNEL_MODE
 #include <stdio.h>
@@ -46,6 +47,8 @@ extern "C" {
 #ifdef __KCLIB_KERNEL_MODE
 #define assert(expression) __ASSERT_INTERNAL(expression)
 #else
+
+#define static_assert _Static_assert
 
 // TODO
 

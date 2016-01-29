@@ -16,6 +16,7 @@
 extern "C" {
 #endif
 
+#include <sys/kclib.h>
 #include <machine/types.h>
 
 /** Stolen from newlib */
@@ -557,12 +558,6 @@ typedef __uintptr_t uintptr_t;
 #define UINTMAX_MAX __UINTMAX_MAX__
 #elif defined(__UINTMAX_TYPE__)
 #define UINTMAX_MAX UINT64_MAX
-#endif
-
-#ifdef __SIZE_MAX__
-#define SIZE_MAX __SIZE_MAX__
-#else
-#define SIZE_MAX (__STDINT_EXP(LONG_MAX) * 2UL + 1)
 #endif
 
 #define SIG_ATOMIC_MIN (-__STDINT_EXP(INT_MAX) - 1)

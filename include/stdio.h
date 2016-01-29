@@ -16,6 +16,7 @@
 extern "C" {
 #endif
 
+#include <sys/kclib.h>
 #include <sys/external.h>
 #include <stdarg.h>
 
@@ -29,7 +30,7 @@ extern "C" {
 #define SEEK_END 1
 #define SEEK_SET 2
 
-typedef struct FILE FILE;
+#include <fragments/_file.h>
 
 extern FILE* stderr;
 extern FILE* stdout;

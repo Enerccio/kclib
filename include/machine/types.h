@@ -12,11 +12,12 @@
 #include <gcc_defs.h>
 #endif
 
-#include <machine/defaults.h>
-
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#include <machine/defaults.h>
+#include <sys/kclib.h>
 
 #if __GNUC_PREREQ (3, 3)
 /* GCC >= 3.3.0 has __<val>__ implicitly defined. */

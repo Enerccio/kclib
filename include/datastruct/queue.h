@@ -12,6 +12,7 @@
 extern "C" {
 #endif
 
+#include <sys/kclib.h>
 #include <datastruct/dscommons.h>
 
 #define QUEUE_TYPE(type) __queue_ ## type ## _t

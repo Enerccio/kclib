@@ -12,6 +12,7 @@
 extern "C" {
 #endif
 
+#include <sys/kclib.h>
 #include <datastruct/dscommons.h>
 
 #define HASH_STARTING_SIZE 97

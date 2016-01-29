@@ -16,6 +16,8 @@
 extern "C" {
 #endif
 
+#include <sys/kclib.h>
+
 #ifndef __GNUC_PREREQ
 # if defined __GNUC__ && defined __GNUC_MINOR__
 #  define __GNUC_PREREQ(maj, min) \

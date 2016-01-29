@@ -12,6 +12,7 @@
 #include <gcc_defs.h>
 #endif
 
+#include <sys/kclib.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <threads.h>

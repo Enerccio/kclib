@@ -12,6 +12,7 @@
 extern "C" {
 #endif
 
+#include <sys/kclib.h>
 #include <datastruct/dscommons.h>
 
 #define LLIST_TYPE(type) __llist_ ## type ## _t

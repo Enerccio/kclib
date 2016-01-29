@@ -16,6 +16,8 @@
 extern "C" {
 #endif
 
+#include <sys/kclib.h>
+
 #error KCLIB does not support this library yet
 
 #ifdef __cplusplus
